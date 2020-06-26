@@ -8,8 +8,8 @@
   },
   "private": true,
   "devDependencies": {
-    "highlight.js": "latest",
-    "markdown-it": "latest",
-    "pegjs": "latest"
+    "highlight.js": "^10.1.1",
+    "markdown-it": "^11.0.0",
+    "pegjs": "^0.10.0"
   }
 }
