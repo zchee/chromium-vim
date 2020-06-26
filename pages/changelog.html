@@ -277,18 +277,18 @@ and why it occurred.</li>
 <ul>
 <li><strong>Important!</strong> cVimrc blacklists are now a part of the cVimrc. Previous blacklists should carry over to the cVimrc text area. New blacklists can be declared like this:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">let</span> blacklists = [<span class="hljs-string">"https://www.google.com"</span>]
+<pre class="hljs"><code><span class="hljs-keyword">let</span> blacklists = [<span class="hljs-string">&quot;https://www.google.com&quot;</span>]
 </code></pre>
 <ul>
 <li>When defining custom search engines, you can now add the string <code>%s</code> somewhere inside the URL to indicate that the query should be inserted in this place. This is useful for search engines with URLs that have non-standard structures. For instance:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-comment">" If you search for 'test' using this engine, cVim</span>
-<span class="hljs-comment">" will open this link -&gt; http://www.example.com/test?type=search</span>
-<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">"http://www.example.com/%s?type=search"</span>
+<pre class="hljs"><code><span class="hljs-comment">&quot; If you search for &#x27;test&#x27; using this engine, cVim</span>
+<span class="hljs-comment">&quot; will open this link -&gt; http://www.example.com/test?type=search</span>
+<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">&quot;http://www.example.com/%s?type=search&quot;</span>
 
-<span class="hljs-comment">" In the case below, '%s' is optional. If it is not included, your search query will be appended to the URL</span>
-<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">"http://www.example.com/search?query="</span>
-<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">"http://www.example.com/search?query=%s"</span> <span class="hljs-comment">"This is no different from the above case</span>
+<span class="hljs-comment">&quot; In the case below, &#x27;%s&#x27; is optional. If it is not included, your search query will be appended to the URL</span>
+<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">&quot;http://www.example.com/search?query=&quot;</span>
+<span class="hljs-keyword">let</span> searchengine example = <span class="hljs-string">&quot;http://www.example.com/search?query=%s&quot;</span> <span class="hljs-comment">&quot;This is no different from the above case</span>
 </code></pre>
 <ul>
 <li>Added lastScrollPosition <code>''</code>, goToMark <code>'&lt;*&gt;</code>, and setMark <code>;&lt;*&gt;</code> mappings</li>
@@ -310,13 +310,13 @@ and why it occurred.</li>
 <ul>
 <li><strong>Important!</strong> cVimrc setting are now stricter. You must use 'let' instead of set when using options requiring an equal symbol. For example:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">set</span> hintcharacters = abc123 <span class="hljs-comment">"Incorrect!</span>
-<span class="hljs-keyword">let</span> hintcharacters = <span class="hljs-string">"abc123"</span> <span class="hljs-comment">"Correct</span>
+<pre class="hljs"><code><span class="hljs-keyword">set</span> hintcharacters = abc123 <span class="hljs-comment">&quot;Incorrect!</span>
+<span class="hljs-keyword">let</span> hintcharacters = <span class="hljs-string">&quot;abc123&quot;</span> <span class="hljs-comment">&quot;Correct</span>
 </code></pre>
 <ul>
 <li>Added completionengines option to cVimrc (choose which completion engines to display). For example:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">"google"</span>, <span class="hljs-string">"imdb"</span>] <span class="hljs-comment">"Only these engines will appear in the search autocomplete menu</span>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">&quot;google&quot;</span>, <span class="hljs-string">&quot;imdb&quot;</span>] <span class="hljs-comment">&quot;Only these engines will appear in the search autocomplete menu</span>
 </code></pre>
 <ul>
 <li>Added autohidecursor option (useful for Linux operating systems, which don’t automatically hide the mouse cursor when a key is pressed). You can test this out by running the command <code>:set autohidecursor</code> and scrolling with j/k (might have to nudge mouse cursor then scroll to see it disappear initially).</li>

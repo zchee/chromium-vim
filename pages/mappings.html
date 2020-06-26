@@ -17,7 +17,8 @@
 <script src="../content_scripts/scroll.js"></script>
 <script src="../content_scripts/search.js"></script>
 <script src="../content_scripts/frames.js"></script>
-<script src="../content_scripts/messenger.js"></script></head><h1>What is cVim?</h1>
+<script src="../content_scripts/messenger.js"></script></head><h1><a href="https://www.paypal.me/1995eaton">Like cVim? Consider donating! https://www.paypal.me/1995eaton</a></h1>
+<h1>What is cVim?</h1>
 <p>Vim for Google Chrome. I hate using the mouse, especially after learning Vim. With my desktop (Linux), I have a lot of key bindings that make doing things easier: I open Chrome with <code>Alt+w</code>, I close a window with <code>Alt+Shift+d</code>, I open a terminal with <code>Alt+t</code>. This is harder to do with Chrome because it has no section for customizing keyboard shortcuts, and it is still necessary to use the mouse to do things like click links. cVim aims to eliminate this problem as best as the Chrome extensions API will allow it to.</p>
 <h1>Where can I get cVim?</h1>
 <ul>
@@ -324,71 +325,71 @@ the command <code>'set' + no&lt;SETTING_NAME&gt;</code> (for example, <code>set 
 </tbody>
 </table>
 <h3>Example configuration</h3>
-<pre class="hljs"><code><span class="hljs-comment">" Settings</span>
+<pre class="hljs"><code><span class="hljs-comment">&quot; Settings</span>
 <span class="hljs-keyword">set</span> nohud
 <span class="hljs-keyword">set</span> nosmoothscroll
-<span class="hljs-keyword">set</span> noautofocus <span class="hljs-comment">" The opposite of autofocus; this setting stops</span>
-                <span class="hljs-comment">" sites from focusing on an input box when they load</span>
+<span class="hljs-keyword">set</span> noautofocus <span class="hljs-comment">&quot; The opposite of autofocus; this setting stops</span>
+                <span class="hljs-comment">&quot; sites from focusing on an input box when they load</span>
 <span class="hljs-keyword">set</span> typelinkhints
 <span class="hljs-keyword">let</span> searchlimit = <span class="hljs-number">30</span>
 <span class="hljs-keyword">let</span> scrollstep = <span class="hljs-number">70</span>
-<span class="hljs-keyword">let</span> barposition = <span class="hljs-string">"bottom"</span>
+<span class="hljs-keyword">let</span> barposition = <span class="hljs-string">&quot;bottom&quot;</span>
 
-<span class="hljs-keyword">let</span> locale = <span class="hljs-string">"uk"</span> <span class="hljs-comment">" Current choices are 'jp' and 'uk'. This allows cVim to use sites like google.co.uk</span>
-                  <span class="hljs-comment">" or google.co.jp to search rather than google.com. Support is currently limited.</span>
-                  <span class="hljs-comment">" Let me know if you need a different locale for one of the completion/search engines</span>
-<span class="hljs-keyword">let</span> hintcharacters = <span class="hljs-string">"abc123"</span>
+<span class="hljs-keyword">let</span> locale = <span class="hljs-string">&quot;uk&quot;</span> <span class="hljs-comment">&quot; Current choices are &#x27;jp&#x27; and &#x27;uk&#x27;. This allows cVim to use sites like google.co.uk</span>
+                  <span class="hljs-comment">&quot; or google.co.jp to search rather than google.com. Support is currently limited.</span>
+                  <span class="hljs-comment">&quot; Let me know if you need a different locale for one of the completion/search engines</span>
+<span class="hljs-keyword">let</span> hintcharacters = <span class="hljs-string">&quot;abc123&quot;</span>
 
-<span class="hljs-keyword">let</span> searchengine dogpile = <span class="hljs-string">"http://www.dogpile.com/search/web?q=%s"</span> <span class="hljs-comment">" If you leave out the '%s' at the end of the URL,</span>
-                                                                    <span class="hljs-comment">" your query will be appended to the link.</span>
-                                                                    <span class="hljs-comment">" Otherwise, your query will replace the '%s'.</span>
+<span class="hljs-keyword">let</span> searchengine dogpile = <span class="hljs-string">&quot;http://www.dogpile.com/search/web?q=%s&quot;</span> <span class="hljs-comment">&quot; If you leave out the &#x27;%s&#x27; at the end of the URL,</span>
+                                                                    <span class="hljs-comment">&quot; your query will be appended to the link.</span>
+                                                                    <span class="hljs-comment">&quot; Otherwise, your query will replace the &#x27;%s&#x27;.</span>
 
-<span class="hljs-comment">" This will do the same thing as above, except typing ':tabnew withbase' into to command bar</span>
-<span class="hljs-comment">" without any search parameters will open 'http://www.dogpile.com'</span>
-<span class="hljs-keyword">let</span> searchengine withbase = [<span class="hljs-string">"http://www.dogpile.com"</span>, <span class="hljs-string">"http://www.dogpile.com/search/web?q=%s"</span>]
+<span class="hljs-comment">&quot; This will do the same thing as above, except typing &#x27;:tabnew withbase&#x27; into to command bar</span>
+<span class="hljs-comment">&quot; without any search parameters will open &#x27;http://www.dogpile.com&#x27;</span>
+<span class="hljs-keyword">let</span> searchengine withbase = [<span class="hljs-string">&quot;http://www.dogpile.com&quot;</span>, <span class="hljs-string">&quot;http://www.dogpile.com/search/web?q=%s&quot;</span>]
 
-<span class="hljs-comment">" alias ':g' to ':tabnew google'</span>
+<span class="hljs-comment">&quot; alias &#x27;:g&#x27; to &#x27;:tabnew google&#x27;</span>
 <span class="hljs-keyword">command</span> g <span class="hljs-keyword">tabnew</span> google
 
-<span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">"google"</span>, <span class="hljs-string">"amazon"</span>, <span class="hljs-string">"imdb"</span>, <span class="hljs-string">"dogpile"</span>]
+<span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">&quot;google&quot;</span>, <span class="hljs-string">&quot;amazon&quot;</span>, <span class="hljs-string">&quot;imdb&quot;</span>, <span class="hljs-string">&quot;dogpile&quot;</span>]
 
-<span class="hljs-keyword">let</span> searchalias g = <span class="hljs-string">"google"</span> <span class="hljs-comment">" Create a shortcut for search engines.</span>
-                             <span class="hljs-comment">" For example, typing ':tabnew g example'</span>
-                             <span class="hljs-comment">" would act the same way as ':tabnew google example'</span>
+<span class="hljs-keyword">let</span> searchalias g = <span class="hljs-string">&quot;google&quot;</span> <span class="hljs-comment">&quot; Create a shortcut for search engines.</span>
+                             <span class="hljs-comment">&quot; For example, typing &#x27;:tabnew g example&#x27;</span>
+                             <span class="hljs-comment">&quot; would act the same way as &#x27;:tabnew google example&#x27;</span>
 
-<span class="hljs-comment">" Open all of these in a tab with `gnb` or open one of these with &lt;N&gt;goa where &lt;N&gt;</span>
-<span class="hljs-keyword">let</span> qmark <span class="hljs-keyword">a</span> = [<span class="hljs-string">"http://www.reddit.com"</span>, <span class="hljs-string">"http://www.google.com"</span>, <span class="hljs-string">"http://twitter.com"</span>]
+<span class="hljs-comment">&quot; Open all of these in a tab with `gnb` or open one of these with &lt;N&gt;goa where &lt;N&gt;</span>
+<span class="hljs-keyword">let</span> qmark <span class="hljs-keyword">a</span> = [<span class="hljs-string">&quot;http://www.reddit.com&quot;</span>, <span class="hljs-string">&quot;http://www.google.com&quot;</span>, <span class="hljs-string">&quot;http://twitter.com&quot;</span>]
 
-<span class="hljs-keyword">let</span> blacklists = [<span class="hljs-string">"https://mail.google.com/*"</span>, <span class="hljs-string">"*://mail.google.com/*"</span>, <span class="hljs-string">"@https://mail.google.com/mail/*"</span>]
-<span class="hljs-comment">" blacklists prefixed by '@' act as a whitelist</span>
+<span class="hljs-keyword">let</span> blacklists = [<span class="hljs-string">&quot;https://mail.google.com/*&quot;</span>, <span class="hljs-string">&quot;*://mail.google.com/*&quot;</span>, <span class="hljs-string">&quot;@https://mail.google.com/mail/*&quot;</span>]
+<span class="hljs-comment">&quot; blacklists prefixed by &#x27;@&#x27; act as a whitelist</span>
 
-<span class="hljs-keyword">let</span> mapleader = <span class="hljs-string">","</span>
+<span class="hljs-keyword">let</span> mapleader = <span class="hljs-string">&quot;,&quot;</span>
 
-<span class="hljs-comment">" Mappings</span>
+<span class="hljs-comment">&quot; Mappings</span>
 
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;Leader&gt;</span>r reloadTabUncached
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;Leader&gt;</span><span class="hljs-keyword">x</span> :restore<span class="hljs-symbol">&lt;Space&gt;</span>
 
-<span class="hljs-comment">" This remaps the default 'j' mapping</span>
+<span class="hljs-comment">&quot; This remaps the default &#x27;j&#x27; mapping</span>
 <span class="hljs-keyword">map</span> <span class="hljs-keyword">j</span> scrollUp
 
-<span class="hljs-comment">" You can use &lt;Space&gt;, which is interpreted as a</span>
-<span class="hljs-string">" literal "</span> <span class="hljs-comment">" character, to enter buffer completion mode</span>
+<span class="hljs-comment">&quot; You can use &lt;Space&gt;, which is interpreted as a</span>
+<span class="hljs-string">&quot; literal &quot;</span> <span class="hljs-comment">&quot; character, to enter buffer completion mode</span>
 <span class="hljs-keyword">map</span> gb :<span class="hljs-keyword">buffer</span><span class="hljs-symbol">&lt;Space&gt;</span>
 
-<span class="hljs-comment">" This unmaps the default 'k' mapping</span>
+<span class="hljs-comment">&quot; This unmaps the default &#x27;k&#x27; mapping</span>
 <span class="hljs-keyword">unmap</span> <span class="hljs-keyword">k</span>
 
-<span class="hljs-comment">" This unmaps the default 'h', 'j', 'k', and 'l' mappings</span>
+<span class="hljs-comment">&quot; This unmaps the default &#x27;h&#x27;, &#x27;j&#x27;, &#x27;k&#x27;, and &#x27;l&#x27; mappings</span>
 <span class="hljs-keyword">unmap</span> h <span class="hljs-keyword">j</span> <span class="hljs-keyword">k</span> <span class="hljs-keyword">l</span>
 
-<span class="hljs-comment">" This remaps the default 'f' mapping to the current 'F' mapping</span>
+<span class="hljs-comment">&quot; This remaps the default &#x27;f&#x27; mapping to the current &#x27;F&#x27; mapping</span>
 <span class="hljs-keyword">map</span> <span class="hljs-keyword">f</span> F
 
-<span class="hljs-comment">" Toggle the current HUD display value</span>
+<span class="hljs-comment">&quot; Toggle the current HUD display value</span>
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;C-h&gt;</span> :<span class="hljs-keyword">set</span> hud!<span class="hljs-symbol">&lt;CR&gt;</span>
 
-<span class="hljs-comment">" Switch between alphabetical hint characters and numeric hints</span>
+<span class="hljs-comment">&quot; Switch between alphabetical hint characters and numeric hints</span>
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;C-i&gt;</span> :<span class="hljs-keyword">set</span> numerichints!<span class="hljs-symbol">&lt;CR&gt;</span>
 
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;C-u&gt;</span> rootFrame
@@ -398,37 +399,37 @@ the command <code>'set' + no&lt;SETTING_NAME&gt;</code> (for example, <code>set 
 <span class="hljs-keyword">iunmap</span> <span class="hljs-symbol">&lt;C-y&gt;</span>
 <span class="hljs-keyword">imap</span> <span class="hljs-symbol">&lt;C-m&gt;</span> deleteWord
 
-<span class="hljs-comment">" Create a variable that can be used/referenced in the command bar</span>
-<span class="hljs-keyword">let</span> @@reddit_prog = <span class="hljs-string">'http://www.reddit.com/r/programming'</span>
-<span class="hljs-keyword">let</span> @@top_all = <span class="hljs-string">'top?sort=top&amp;t=all'</span>
-<span class="hljs-keyword">let</span> @@top_day = <span class="hljs-string">'top?sort=top&amp;t=day'</span>
+<span class="hljs-comment">&quot; Create a variable that can be used/referenced in the command bar</span>
+<span class="hljs-keyword">let</span> @@reddit_prog = <span class="hljs-string">&#x27;http://www.reddit.com/r/programming&#x27;</span>
+<span class="hljs-keyword">let</span> @@top_all = <span class="hljs-string">&#x27;top?sort=top&amp;t=all&#x27;</span>
+<span class="hljs-keyword">let</span> @@top_day = <span class="hljs-string">&#x27;top?sort=top&amp;t=day&#x27;</span>
 
-<span class="hljs-comment">" TA binding opens 'http://www.reddit.com/r/programming/top?sort=top&amp;t=all' in a new tab</span>
+<span class="hljs-comment">&quot; TA binding opens &#x27;http://www.reddit.com/r/programming/top?sort=top&amp;t=all&#x27; in a new tab</span>
 <span class="hljs-keyword">map</span> TA :<span class="hljs-keyword">tabnew</span> @@reddit_prog/@@top_all<span class="hljs-symbol">&lt;CR&gt;</span>
 <span class="hljs-keyword">map</span> TD :<span class="hljs-keyword">tabnew</span> @@reddit_prog/@@top_day<span class="hljs-symbol">&lt;CR&gt;</span>
 
-<span class="hljs-comment">" Use paste buffer in mappings</span>
-<span class="hljs-keyword">map</span> T :<span class="hljs-keyword">tabnew</span> wikipedia @<span class="hljs-comment">"&lt;CR&gt;</span>
+<span class="hljs-comment">&quot; Use paste buffer in mappings</span>
+<span class="hljs-keyword">map</span> T :<span class="hljs-keyword">tabnew</span> wikipedia @<span class="hljs-comment">&quot;&lt;CR&gt;</span>
 
-<span class="hljs-comment">" Code blocks (see below for more info)</span>
+<span class="hljs-comment">&quot; Code blocks (see below for more info)</span>
 getIP() -&gt; {{
-httpRequest({ur<span class="hljs-variable">l:</span> <span class="hljs-string">'http://api.ipify.org/?format=json'</span>, json: true},
-            <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> { <span class="hljs-title">Status</span>.<span class="hljs-title">setMessage</span><span class="hljs-params">('IP: ' + res.ip)</span>; });</span>
+httpRequest({ur<span class="hljs-variable">l:</span> <span class="hljs-string">&#x27;http://api.ipify.org/?format=json&#x27;</span>, json: true},
+            <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(res)</span> { <span class="hljs-title">Status</span>.<span class="hljs-title">setMessage</span><span class="hljs-params">(&#x27;IP: &#x27; + res.ip)</span>; });</span>
 }}
-<span class="hljs-comment">" Displays your public IP address in the status bar</span>
+<span class="hljs-comment">&quot; Displays your public IP address in the status bar</span>
 <span class="hljs-keyword">map</span> ci :<span class="hljs-keyword">call</span> getIP<span class="hljs-symbol">&lt;CR&gt;</span>
 
-<span class="hljs-comment">" Script hints</span>
+<span class="hljs-comment">&quot; Script hints</span>
 <span class="hljs-keyword">echo</span>(link) -&gt; {{
   alert(link.href);
 }}
 <span class="hljs-keyword">map</span> <span class="hljs-symbol">&lt;C-f&gt;</span> createScriptHint(<span class="hljs-keyword">echo</span>)
 
-<span class="hljs-keyword">let</span> configpath = <span class="hljs-string">'/path/to/your/.cvimrc'</span>
-<span class="hljs-keyword">set</span> localconfig <span class="hljs-comment">" Update settings via a local file (and the `:source` command) rather</span>
-                <span class="hljs-comment">" than the default options page in chrome</span>
-<span class="hljs-comment">" As long as localconfig is set in the .cvimrc file. cVim will continue to read</span>
-<span class="hljs-comment">" settings from there</span>
+<span class="hljs-keyword">let</span> configpath = <span class="hljs-string">&#x27;/path/to/your/.cvimrc&#x27;</span>
+<span class="hljs-keyword">set</span> localconfig <span class="hljs-comment">&quot; Update settings via a local file (and the `:source` command) rather</span>
+                <span class="hljs-comment">&quot; than the default options page in chrome</span>
+<span class="hljs-comment">&quot; As long as localconfig is set in the .cvimrc file. cVim will continue to read</span>
+<span class="hljs-comment">&quot; settings from there</span>
 </code></pre>
 <h3>Blacklists</h3>
 <ul>
@@ -439,8 +440,8 @@ See https://developer.chrome.com/extensions/match_patterns for a description of 
 <ul>
 <li>You can enable certain rc settings for sites using the blacklist match pattern as described above</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-comment">" this will enable the config block below on the domain 'reddit.com'</span>
-site <span class="hljs-string">'*://*.reddit.com/*'</span> {
+<pre class="hljs"><code><span class="hljs-comment">&quot; this will enable the config block below on the domain &#x27;reddit.com&#x27;</span>
+site <span class="hljs-string">&#x27;*://*.reddit.com/*&#x27;</span> {
       <span class="hljs-keyword">unmap</span> <span class="hljs-keyword">j</span>
       <span class="hljs-keyword">unmap</span> <span class="hljs-keyword">k</span>
       <span class="hljs-keyword">set</span> numerichints
@@ -450,9 +451,9 @@ site <span class="hljs-string">'*://*.reddit.com/*'</span> {
 <ul>
 <li>In a similar fashion to the site-specific configuration described above, cVim can run commands when a page is loaded with the <code>call</code> keyword</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-comment">" In this case, when pages with a file ending in '.js' are loaded,</span>
-<span class="hljs-comment">" cVim will pin the tab and then scroll down</span>
-site <span class="hljs-string">'*://*/*.js'</span> {
+<pre class="hljs"><code><span class="hljs-comment">&quot; In this case, when pages with a file ending in &#x27;.js&#x27; are loaded,</span>
+<span class="hljs-comment">&quot; cVim will pin the tab and then scroll down</span>
+site <span class="hljs-string">&#x27;*://*/*.js&#x27;</span> {
       <span class="hljs-keyword">call</span> :pintab
       <span class="hljs-keyword">call</span> scrollDown
 }
@@ -463,9 +464,9 @@ site <span class="hljs-string">'*://*/*.js'</span> {
 <li>Insert mappings use the same structure, but use the command &quot;imap&quot; instead of &quot;map&quot;</li>
 <li>Control, meta, and alt can be used also:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-symbol">&lt;C-u&gt;</span> <span class="hljs-comment">" Ctrl + u</span>
-<span class="hljs-symbol">&lt;M-u&gt;</span> <span class="hljs-comment">" Meta + u</span>
-<span class="hljs-symbol">&lt;A-u&gt;</span> <span class="hljs-comment">" Alt  + u</span>
+<pre class="hljs"><code><span class="hljs-symbol">&lt;C-u&gt;</span> <span class="hljs-comment">&quot; Ctrl + u</span>
+<span class="hljs-symbol">&lt;M-u&gt;</span> <span class="hljs-comment">&quot; Meta + u</span>
+<span class="hljs-symbol">&lt;A-u&gt;</span> <span class="hljs-comment">&quot; Alt  + u</span>
 </code></pre>
 <ul>
 <li>It is also possible to unmap default bindings with <code>unmap &lt;KEY&gt;</code> and insert bindings with <code>iunmap &lt;KEY&gt;</code></li>
@@ -483,61 +484,61 @@ site <span class="hljs-string">'*://*/*.js'</span> {
 <li><code>=</code> =&gt; Treat the query as a URL</li>
 <li>The use of these properties are best explained with examples:</li>
 </ul>
-<pre class="hljs"><code>:open! google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" This is the same as :tabnew google&lt;CR&gt;</span>
+<pre class="hljs"><code>:open! google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; This is the same as :tabnew google&lt;CR&gt;</span>
 
-:<span class="hljs-keyword">open</span> google!<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" This is another way of writing the above</span>
-                  <span class="hljs-comment">" (these flags can can be added to either</span>
-                  <span class="hljs-comment">" the base command or the end of the final command)</span>
+:<span class="hljs-keyword">open</span> google!<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; This is another way of writing the above</span>
+                  <span class="hljs-comment">&quot; (these flags can can be added to either</span>
+                  <span class="hljs-comment">&quot; the base command or the end of the final command)</span>
 
-:<span class="hljs-keyword">open</span>&amp; google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" This will open Google in a new inactive tab</span>
+:<span class="hljs-keyword">open</span>&amp; google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; This will open Google in a new inactive tab</span>
 
-:<span class="hljs-keyword">open</span>$ google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" This will open Google in a new window</span>
+:<span class="hljs-keyword">open</span>$ google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; This will open Google in a new window</span>
 
-:<span class="hljs-keyword">open</span>&amp;* google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" The will open Google in a new inactive, pinned tab</span>
+:<span class="hljs-keyword">open</span>&amp;* google<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; The will open Google in a new inactive, pinned tab</span>
 
-:<span class="hljs-keyword">tabnew</span> google&amp;*<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" Once again, this will do the same thing as the above command</span>
+:<span class="hljs-keyword">tabnew</span> google&amp;*<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; Once again, this will do the same thing as the above command</span>
 
-:<span class="hljs-keyword">open</span> google&amp;*<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">" Again, same as above</span>
+:<span class="hljs-keyword">open</span> google&amp;*<span class="hljs-symbol">&lt;CR&gt;</span> <span class="hljs-comment">&quot; Again, same as above</span>
 
-:<span class="hljs-keyword">open</span> google!&amp; <span class="hljs-comment">" Here, the &amp; flag will cancel out the ! flag,</span>
-               <span class="hljs-comment">" opening Google in a new inactive tab</span>
+:<span class="hljs-keyword">open</span> google!&amp; <span class="hljs-comment">&quot; Here, the &amp; flag will cancel out the ! flag,</span>
+               <span class="hljs-comment">&quot; opening Google in a new inactive tab</span>
 
-<span class="hljs-comment">" More examples</span>
-:bookmarks my_bookmark.<span class="hljs-keyword">com</span>&amp;  <span class="hljs-comment">" inactive,new tab</span>
-:bookmarks&amp;* my_bookmark.<span class="hljs-keyword">com</span> <span class="hljs-comment">" inactive,pinned,new tab</span>
-:bookmarks! my_bookmark.<span class="hljs-keyword">com</span>  <span class="hljs-comment">" new tab</span>
-:bookmarks$ my_bookmark.<span class="hljs-keyword">com</span>  <span class="hljs-comment">" new window</span>
-:bookmarks my_bookmark.<span class="hljs-keyword">com</span>   <span class="hljs-comment">" same tab</span>
+<span class="hljs-comment">&quot; More examples</span>
+:bookmarks my_bookmark.<span class="hljs-keyword">com</span>&amp;  <span class="hljs-comment">&quot; inactive,new tab</span>
+:bookmarks&amp;* my_bookmark.<span class="hljs-keyword">com</span> <span class="hljs-comment">&quot; inactive,pinned,new tab</span>
+:bookmarks! my_bookmark.<span class="hljs-keyword">com</span>  <span class="hljs-comment">&quot; new tab</span>
+:bookmarks$ my_bookmark.<span class="hljs-keyword">com</span>  <span class="hljs-comment">&quot; new window</span>
+:bookmarks my_bookmark.<span class="hljs-keyword">com</span>   <span class="hljs-comment">&quot; same tab</span>
 </code></pre>
 <h3>Code blocks</h3>
 <ul>
 <li>Code blocks allow you to interact with cVim’s content scripts via the cVimrc.</li>
 <li>Since code blocks use <code>eval(...)</code>, you should only use them if you know what you’re doing.</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-string">" To be used by the code block
+<pre class="hljs"><code><span class="hljs-string">&quot; To be used by the code block
 set hintset_a
 
-"</span> Create a code block named switchHintCharacters
+&quot;</span> Create a code block named switchHintCharacters
 switchHintCharacters -&gt; {{
   <span class="hljs-comment">// We are now in JavaScript mode</span>
 
   <span class="hljs-comment">// Settings are contained in an object named settings</span>
   settings.hintset_a = !settings.hintset_a;
   <span class="hljs-keyword">if</span> (settings.hintset_a) {
-    settings.hintcharacters = <span class="hljs-string">'abc'</span>; <span class="hljs-comment">// equivalent to "let hintcharacters = 'abc'"</span>
+    settings.hintcharacters = <span class="hljs-string">&#x27;abc&#x27;</span>; <span class="hljs-comment">// equivalent to &quot;let hintcharacters = &#x27;abc&#x27;&quot;</span>
   } <span class="hljs-keyword">else</span> {
-    settings.hintcharacters = <span class="hljs-string">'xyz'</span>;
+    settings.hintcharacters = <span class="hljs-string">&#x27;xyz&#x27;</span>;
   }
 
   <span class="hljs-comment">// Propagate the current settings to all tabs for the</span>
   <span class="hljs-comment">// rest of the session</span>
-  PORT(<span class="hljs-string">'syncSettings'</span>, { <span class="hljs-attr">settings</span>: settings });
+  PORT(<span class="hljs-string">&#x27;syncSettings&#x27;</span>, { <span class="hljs-attr">settings</span>: settings });
 
-  <span class="hljs-comment">// Display cVim's status bar for 2 seconds.</span>
-  Status.setMessage(<span class="hljs-string">'Hint Set: '</span> + (<span class="hljs-literal">true</span> ? <span class="hljs-string">'a'</span> : <span class="hljs-string">'b'</span>), <span class="hljs-number">2</span>);
+  <span class="hljs-comment">// Display cVim&#x27;s status bar for 2 seconds.</span>
+  Status.setMessage(<span class="hljs-string">&#x27;Hint Set: &#x27;</span> + (<span class="hljs-literal">true</span> ? <span class="hljs-string">&#x27;a&#x27;</span> : <span class="hljs-string">&#x27;b&#x27;</span>), <span class="hljs-number">2</span>);
 }}
 
-<span class="hljs-string">" Run the JavaScript block
+<span class="hljs-string">&quot; Run the JavaScript block
 map &lt;Tab&gt; :call switchHintCharacters&lt;CR&gt;
 </span></code></pre>
 <h3>Completion Engines</h3>
@@ -552,7 +553,7 @@ yahoo, bing, themoviedb</li>
 </li>
 <li>Example usage:</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">'google'</span>, <span class="hljs-string">'google-image'</span>, <span class="hljs-string">'youtube'</span>] <span class="hljs-comment">" Show only these engines in the command bar</span>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> completionengines = [<span class="hljs-string">&#x27;google&#x27;</span>, <span class="hljs-string">&#x27;google-image&#x27;</span>, <span class="hljs-string">&#x27;youtube&#x27;</span>] <span class="hljs-comment">&quot; Show only these engines in the command bar</span>
 </code></pre>
 <h1>Keybindings</h1>
 <table>
