@@ -22,7 +22,7 @@ port.onDisconnect.addListener(function() {
           callback : void 0);
     };
   };
-  RUNTIME = $(chrome.runtime.sendMessage, chrome.runtime);
+  RUNTIME = $(chrome.runtime.sendNativeMessage, chrome.runtime);
   PORT = $(port.postMessage, port);
   ECHO = function(action, args, callback) {
     args.action = 'echoRequest';
