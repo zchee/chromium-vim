@@ -1,16 +1,16 @@
 {
   "name": "chromium-vim",
-  "author": "Jake Eaton <1995eaton@gmail.com>",
   "description": "Vim bindings for Google Chrome.",
+  "author": "Jake Eaton <1995eaton@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/1995eaton/chromium-vim"
   },
   "private": true,
-  "scripts": {
-    "build": "npm run build:create_pages && npm run build:cvimrc_parser && bash ./scripts/build.sh",
-    "build:create_pages": "node scripts/create_pages.js",
-    "build:cvimrc_parser": "cd ./cvimrc_parser && npx pegjs --optimize speed --format globals -e RCParser parser.peg && cp parser.js ../content_scripts/cvimrc_parser.js"
+  "engines": {
+    "node": ">=22.x",
+    "npm": ">=10.x",
+    "pnpm": ">=10.x"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.308",
@@ -20,5 +20,11 @@
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "pegjs": "^0.10.0"
+  },
+  "scripts": {
+    "build": "npm run build:create_pages && npm run build:cvimrc_parser",
+    "build:create_pages": "node scripts/create_pages.js",
+    "build:cvimrc_parser": "cd ./cvimrc_parser && npx pegjs --optimize speed --format globals -e RCParser parser.peg && cp parser.js ../content_scripts/cvimrc_parser.js",
+    "release": "bash ./scripts/build.sh"
   }
 }

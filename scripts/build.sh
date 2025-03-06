@@ -16,5 +16,5 @@ scripts/create_pages.js
 
 mkdir release
 
-cp -r `find . -maxdepth 1 | egrep -vE "^\.$|\.git|release|node_modules|^scripts|\.md|\.txt|\.eslintrc|LIC|READ|user.css"` release
+cp -r $(find . -maxdepth 1 | grep -vE "^\.$|\.git|release|node_modules|^scripts|\.md|\.txt|\.eslintrc|LIC|READ|user.css") release
 zip -r release.zip release

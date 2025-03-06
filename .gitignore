@@ -3,6 +3,9 @@
 # dependencies
 node_modules
 
+# google/wireit cache
+.wireit
+
 # testing
 coverage
 

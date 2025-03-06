@@ -14,7 +14,7 @@ var md = require('markdown-it')('default', {
     if (lang && hljs.getLanguage(lang)) {
       try {
         return '<pre class="hljs"><code>' +
-          hljs.highlight(lang, str, true).value +
+          hljs.highlight(str, {language: "vbscript", ignoreIllegals: true }).value +
           '</code></pre>';
       } catch (error) {
         console.error(error);
