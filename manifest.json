@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "cVim",
   "version": "1.2.99",
   "description": "An extension adding Vim-like bindings to Google Chrome",
@@ -9,7 +9,9 @@
     "48":  "icons/48.png",
     "16":  "icons/16.png"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
   "commands": {
     "nextTab": {
       "description": "Go to the next tab"
@@ -45,7 +47,7 @@
       "description": "View the page source"
     }
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "19": "icons/disabled.png",
       "38": "icons/disabled-38.png"
@@ -55,7 +57,7 @@
   },
   "author": "Jake Eaton",
   "permissions": [
-    "<all_urls>",
+    "activeTab",
     "tabs",
     "history",
     "bookmarks",
@@ -63,31 +65,17 @@
     "sessions",
     "downloads",
     "topSites",
-    "downloads.shelf",
     "clipboardRead",
     "clipboardWrite",
-    "webNavigation"
+    "webNavigation",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ],
   "background": {
-    "persistant": false,
-    "scripts": [
-      "content_scripts/utils.js",
-      "content_scripts/cvimrc_parser.js",
-      "background_scripts/clipboard.js",
-      "background_scripts/bookmarks.js",
-      "background_scripts/sites.js",
-      "background_scripts/files.js",
-      "background_scripts/links.js",
-      "background_scripts/history.js",
-      "background_scripts/actions.js",
-      "background_scripts/main.js",
-      "background_scripts/options.js",
-      "background_scripts/sessions.js",
-      "background_scripts/popup.js",
-      "background_scripts/update.js",
-      "background_scripts/tab_creation_order.js",
-      "background_scripts/frames.js"
-    ]
+    "service_worker": "background_scripts/service-worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -120,5 +108,10 @@
     }
   ],
   "options_page": "pages/options.html",
-  "web_accessible_resources": ["cmdline_frame.html"]
+  "web_accessible_resources": [
+    {
+      "resources": ["cmdline_frame.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
