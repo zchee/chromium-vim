@@ -10,7 +10,6 @@ can be changed by setting the VIM_COMMAND variable below
 '''
 
 import os
-import sys
 import shlex
 from json import loads
 import subprocess
@@ -50,7 +49,7 @@ class CvimServer(BaseHTTPRequestHandler):
         self.wfile.write(edit.encode('utf8'))
 
 
-def init_server(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler):
+def init_server(server_class=HTTPServer):
     server_address = ('127.0.0.1', PORT)
     httpd = server_class(server_address, CvimServer)
     httpd.serve_forever()
