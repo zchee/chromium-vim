@@ -2,6 +2,9 @@
 
 process.chdir(__dirname);
 
+// import { readFileSync, writeFileSync } from 'fs';
+// import { getLanguage, highlight } from 'highlight.js';
+// import 'highlight.js';
 var fs = require('fs');
 var hljs = require('highlight.js');
 
@@ -14,7 +17,7 @@ var md = require('markdown-it')('default', {
     if (lang && hljs.getLanguage(lang)) {
       try {
         return '<pre class="hljs"><code>' +
-          hljs.highlight(lang, str, true).value +
+          hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
           '</code></pre>';
       } catch (error) {
         console.error(error);
@@ -51,26 +54,26 @@ var scripts = [
 
 var makeHTML = function(data) {
   return '<!DOCTYPE html><html><head>' +
-         '<meta charset="utf-8">' +
-         '<link rel="stylesheet" href="./markdown.css">' +
-         '<link rel="stylesheet" href="./hljs.css">' +
-         '<link rel="stylesheet" href="../content_scripts/main.css">' +
-         scripts.map(function(e) {
-           return '<script src="' + e + '"></script>';
-         }).join('\n') +
-         '</head>' + md.render(data) + '</html>';
+    '<meta charset="utf-8">' +
+    '<link rel="stylesheet" href="./markdown.css">' +
+    '<link rel="stylesheet" href="./hljs.css">' +
+    '<link rel="stylesheet" href="../content_scripts/main.css">' +
+    scripts.map(function(e) {
+      return '<script src="' + e + '"></script>';
+    }).join('\n') +
+    '</head>' + md.render(data) + '</html>';
 };
 
 (function() {
 
   var fileMap = {
-    mappings:  'README.md',
+    mappings: 'README.md',
     changelog: 'CHANGELOG.md'
   };
 
   for (var key in fileMap) {
     var data = fs.readFileSync('../' + fileMap[key], 'utf8');
-    fs.writeFileSync('../pages/' + key + '.html', makeHTML(data));
+    fs.writeFileSync('../src/pages/' + key + '.html', makeHTML(data));
   }
 
 })();

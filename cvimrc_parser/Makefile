@@ -1,5 +1,5 @@
 all:
-	../node_modules/pegjs/bin/pegjs --optimize speed --format globals -e RCParser parser.peg && cp parser.js ../content_scripts/cvimrc_parser.js
+	pnpx pegjs --optimize speed --format globals -e RCParser parser.peg && cp parser.js ../src/content_scripts/cvimrc_parser.js
 
 test: all
 	node ./test/test.js

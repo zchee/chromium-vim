@@ -7,9 +7,26 @@
     "url": "https://github.com/1995eaton/chromium-vim"
   },
   "private": true,
+  "scripts": {
+    "build": "tsc && node scripts/build.js",
+    "build:dev": "tsc --watch",
+    "build:parser": "cd cvimrc_parser && make",
+    "build:pages": "node scripts/create_pages.js",
+    "clean": "rm -rf dist release",
+    "lint": "eslint src/**/*.ts",
+    "type-check": "tsc --noEmit",
+    "test": "cd cvimrc_parser && node test/test.js",
+    "release": "npm run clean && npm run build && node scripts/release.js"
+  },
   "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.19.4",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
-    "pegjs": "^0.10.0"
+    "pegjs": "^0.10.0",
+    "typescript": "^5.8.3"
   }
 }
