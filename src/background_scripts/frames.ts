@@ -203,7 +203,12 @@ class TabFrames {
       nextId = sortedIds[nextIndex];
     }
 
-    this.focus(nextId, false);
+    // Ensure nextId is valid before focusing
+    if (nextId !== undefined) {
+      this.focus(nextId, false);
+    } else {
+      console.warn(`TabFrames.focusNext: No valid frame ID found for tab ${this.tabId}`);
+    }
   }
 
   /**

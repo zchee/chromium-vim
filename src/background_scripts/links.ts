@@ -139,6 +139,11 @@ class LinksManager {
       for (let i = 0; i < limitedLinks.length; i++) {
         const url = limitedLinks[i];
         
+        // Skip if URL is undefined (due to noUncheckedIndexedAccess)
+        if (!url) {
+          continue;
+        }
+        
         try {
           // Validate URL if requested
           if (opts.validate) {
@@ -209,7 +214,7 @@ class LinksManager {
           chrome.tabs.create({
             url: url,
             active: false
-          }, (tab) => {
+          }, (_tab) => {
             if (chrome.runtime.lastError) {
               console.error(`LinksManager.multiOpenSync: Failed to open ${url}:`, chrome.runtime.lastError);
             }
@@ -240,7 +245,7 @@ class LinksManager {
     }
 
     const tabOptions: LinkTabOptions = {
-      url: validation.normalizedUrl || url,
+      url: validation.normalizedUrl ?? url,
       active: false,
       ...options
     };
@@ -326,7 +331,7 @@ class LinksManager {
    */
   normalizeUrl(url: string): string {
     const validation = this.validateUrl(url);
-    return validation.normalizedUrl || url;
+    return validation.normalizedUrl ?? url;
   }
 
   /**

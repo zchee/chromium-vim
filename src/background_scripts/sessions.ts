@@ -363,20 +363,26 @@ class SessionsManager {
           const removedTab = windowTabs[tabId];
 
           // Initialize tab history for window if needed
-          if (!this.tabHistory[removedTab.windowId]) {
-            this.tabHistory[removedTab.windowId] = [];
-          }
+          if (removedTab.windowId !== undefined) {
+            const windowId = removedTab.windowId;
+            if (!this.tabHistory[windowId]) {
+              this.tabHistory[windowId] = [];
+            }
 
-          // Add to tab history
-          if (removedTab.id !== undefined) {
-            this.tabHistory[removedTab.windowId].push({
-              id: removedTab.id,
-              index: removedTab.index,
-              pinned: removedTab.pinned,
-              active: removedTab.active,
-              url: removedTab.url || '',
-              windowId: removedTab.windowId
-            });
+            // Add to tab history
+            if (removedTab.id !== undefined) {
+              const tabHistoryEntry = this.tabHistory[windowId];
+              if (tabHistoryEntry) {
+                tabHistoryEntry.push({
+                  id: removedTab.id,
+                  index: removedTab.index,
+                  pinned: removedTab.pinned,
+                  active: removedTab.active,
+                  url: removedTab.url || '',
+                  windowId: removedTab.windowId
+                });
+              }
+            }
           }
 
           // Remove from active tabs
@@ -414,8 +420,11 @@ class SessionsManager {
         }
 
         // Update active tabs tracking
-        if (updatedTab.id !== undefined) {
-          this.activeTabs[updatedTab.windowId][updatedTab.id] = updatedTab;
+        if (updatedTab.id !== undefined && updatedTab.windowId !== undefined) {
+          const windowTabs = this.activeTabs[updatedTab.windowId];
+          if (windowTabs) {
+            windowTabs[updatedTab.id] = updatedTab;
+          }
         }
       });
     } catch (error) {

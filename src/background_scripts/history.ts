@@ -54,10 +54,11 @@ interface HistoryTabMessage {
 
 /**
  * Storage interface for localStorage operations
+ * @ts-ignore - kept for future use
  */
-interface HistoryStorage {
-  [key: string]: string | undefined;
-}
+// interface HistoryStorage {
+//   [key: string]: string | undefined;
+// }
 
 // Global searchArray function declaration
 declare var searchArray: SearchArrayFunction;
@@ -437,7 +438,7 @@ class HistoryManager {
   async retrieveSearchHistoryAsync(search: string, limit: number): Promise<chrome.history.HistoryItem[]> {
     return new Promise((resolve, reject) => {
       try {
-        this.retrieveSearchHistory(search, limit, (results: chrome.history.HistoryItem[], fromCache?: boolean) => {
+        this.retrieveSearchHistory(search, limit, (results: chrome.history.HistoryItem[], _fromCache?: boolean) => {
           resolve(results);
         });
       } catch (error) {

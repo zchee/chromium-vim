@@ -530,7 +530,10 @@ class OptionsManager {
       // Update quickmarks
       if (typeof Quickmarks !== 'undefined') {
         for (const key in this.settings.qmarks) {
-          Quickmarks[key] = this.settings.qmarks[key];
+          const qmarkValue = this.settings.qmarks[key];
+          if (qmarkValue !== undefined) {
+            Quickmarks[key] = qmarkValue;
+          }
         }
       }
 
@@ -572,7 +575,10 @@ class OptionsManager {
     // Update quickmarks
     if (typeof Quickmarks !== 'undefined') {
       for (const key in this.settings.qmarks) {
-        Quickmarks[key] = this.settings.qmarks[key];
+        const qmarkValue = this.settings.qmarks[key];
+        if (qmarkValue !== undefined) {
+          Quickmarks[key] = qmarkValue;
+        }
       }
     }
 
@@ -721,7 +727,7 @@ class OptionsManager {
    * @param sender Sender information (unused)
    * @param callback Callback to return defaults
    */
-  getDefaults(request: any, sender: chrome.runtime.MessageSender, callback: (defaults: Settings) => void): void {
+  getDefaults(_request: any, _sender: chrome.runtime.MessageSender, callback: (defaults: Settings) => void): void {
     callback(this.defaultSettings as Settings);
   }
 
@@ -732,7 +738,7 @@ class OptionsManager {
    * @param sender Sender information (unused)
    * @param callback Callback to return all settings
    */
-  getAllSettings(request: any, sender: chrome.runtime.MessageSender, callback: (response: AllSettingsResponse) => void): void {
+  getAllSettings(_request: any, _sender: chrome.runtime.MessageSender, callback: (response: AllSettingsResponse) => void): void {
     callback({
       defaults: this.defaultSettings as Settings,
       current: this.settings
@@ -753,14 +759,15 @@ class OptionsManager {
       let index: number | undefined;
 
       // Handle legacy BLACKLISTS setting
-      if (this.settings.BLACKLISTS) {
+      if (this.settings.BLACKLISTS && typeof this.settings.BLACKLISTS === 'string') {
         this.settings.blacklists = this.settings.BLACKLISTS.split(/\n+/);
         delete this.settings.BLACKLISTS;
       }
 
       // Remove existing blacklists declaration from RC
       for (let i = 0; i < rc.length; ++i) {
-        if (/ *let *blacklists *= */.test(rc[i])) {
+        const line = rc[i];
+        if (line && / *let *blacklists *= */.test(line)) {
           rc.splice(i, 1);
           index = i;
           break;
@@ -804,14 +811,15 @@ class OptionsManager {
     let index: number | undefined;
 
     // Handle legacy BLACKLISTS setting
-    if (this.settings.BLACKLISTS) {
+    if (this.settings.BLACKLISTS && typeof this.settings.BLACKLISTS === 'string') {
       this.settings.blacklists = this.settings.BLACKLISTS.split(/\n+/);
       delete this.settings.BLACKLISTS;
     }
 
     // Remove existing blacklists declaration from RC
     for (let i = 0; i < rc.length; ++i) {
-      if (/ *let *blacklists *= */.test(rc[i])) {
+      const line = rc[i];
+      if (line && / *let *blacklists *= */.test(line)) {
         rc.splice(i, 1);
         index = i;
         break;
@@ -1068,33 +1076,33 @@ class OptionsManager {
    * 
    * @deprecated Use async initialization instead
    */
-  private initializeOptionsSync(): void {
-    chrome.storage[this.storageMethod].get('settings', (data) => {
-      if (chrome.runtime.lastError) {
-        console.error('OptionsManager.initializeOptionsSync: Error getting settings:', chrome.runtime.lastError);
-        return;
-      }
+  // private initializeOptionsSync(): void {
+  //   chrome.storage[this.storageMethod].get('settings', (data) => {
+  //     if (chrome.runtime.lastError) {
+  //       console.error('OptionsManager.initializeOptionsSync: Error getting settings:', chrome.runtime.lastError);
+  //       return;
+  //     }
 
-      if (data.settings) {
-        this.settings = data.settings;
+  //     if (data.settings) {
+  //       this.settings = data.settings;
         
-        if (typeof Quickmarks !== 'undefined') {
-          Object.assign(Quickmarks, this.settings.qmarks);
-        }
-      }
+  //       if (typeof Quickmarks !== 'undefined') {
+  //         Object.assign(Quickmarks, this.settings.qmarks);
+  //       }
+  //     }
 
-      if (this.settings.debugcss) {
-        this.settings.COMMANDBARCSS = this.defaultSettings.COMMANDBARCSS;
-      }
+  //     if (this.settings.debugcss) {
+  //       this.settings.COMMANDBARCSS = this.defaultSettings.COMMANDBARCSS;
+  //     }
 
-      this.refreshSettingsSync();
-      this.updateBlacklistsMappingsSync();
+  //     this.refreshSettingsSync();
+  //     this.updateBlacklistsMappingsSync();
 
-      if (this.settings.autoupdategist && this.settings.GISTURL) {
-        this.scheduleGistUpdateSync();
-      }
-    });
-  }
+  //     if (this.settings.autoupdategist && this.settings.GISTURL) {
+  //       this.scheduleGistUpdateSync();
+  //     }
+  //   });
+  // }
 
   /**
    * Gets options manager statistics

@@ -401,11 +401,13 @@ class PopupManager {
         return;
       }
 
+      const tabUrl = tab.url;
       let foundMatch = false;
       
       // Remove from blacklist if found
       for (let i = blacklists.length - 1; i >= 0; i--) {
-        if (matchLocation(tab.url, blacklists[i])) {
+        const blacklistPattern = blacklists[i];
+        if (blacklistPattern && matchLocation(tabUrl, blacklistPattern)) {
           blacklists.splice(i, 1);
           foundMatch = true;
         }
@@ -414,7 +416,7 @@ class PopupManager {
       // Add to blacklist if not found
       if (!foundMatch) {
         try {
-          const url = new URL(tab.url);
+          const url = new URL(tabUrl);
           blacklists.push(`${url.protocol}//${url.hostname}/*`);
         } catch (urlError) {
           console.error('PopupManager.toggleBlacklisted: Invalid URL:', urlError);
@@ -444,11 +446,13 @@ class PopupManager {
         return;
       }
 
+      const tabUrl = tab.url;
       let foundMatch = false;
       
       // Remove from blacklist if found
       for (let i = blacklists.length - 1; i >= 0; i--) {
-        if (matchLocation(tab.url, blacklists[i])) {
+        const blacklistPattern = blacklists[i];
+        if (blacklistPattern && matchLocation(tabUrl, blacklistPattern)) {
           blacklists.splice(i, 1);
           foundMatch = true;
         }
@@ -457,7 +461,7 @@ class PopupManager {
       // Add to blacklist if not found
       if (!foundMatch) {
         try {
-          const url = new URL(tab.url);
+          const url = new URL(tabUrl);
           blacklists.push(`${url.protocol}//${url.hostname}/*`);
         } catch (urlError) {
           console.error('PopupManager.toggleBlacklistedSync: Invalid URL:', urlError);

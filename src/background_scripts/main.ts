@@ -186,7 +186,10 @@ class MainController {
           // Set headers if provided
           if (request.headers) {
             Object.keys(request.headers).forEach(key => {
-              xhr.setRequestHeader(key, request.headers![key]);
+              const headerValue = request.headers![key];
+              if (headerValue !== undefined) {
+                xhr.setRequestHeader(key, headerValue);
+              }
             });
           }
 
@@ -516,7 +519,7 @@ class MainController {
   /**
    * Handles tab update events
    */
-  private handleTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab): void {
+  private handleTabUpdated(tabId: number, changeInfo: chrome.tabs.TabChangeInfo, _tab: chrome.tabs.Tab): void {
     this.updateTabIndicesSync();
 
     if (changeInfo.hasOwnProperty('url') && changeInfo.url) {
@@ -528,19 +531,21 @@ class MainController {
       // Update tab history
       if (this.tabHistory.hasOwnProperty(tabId)) {
         const history = this.tabHistory[tabId];
-        const urlIndex = history.links.indexOf(changeInfo.url);
-        
-        if (urlIndex === -1) {
-          // New URL - add to history
-          if (history.state !== undefined && history.state + 1 !== history.links.length) {
-            // Remove forward history if we're not at the end
-            history.links.splice(history.state + 1);
+        if (history && changeInfo.url) {
+          const urlIndex = history.links.indexOf(changeInfo.url);
+          
+          if (urlIndex === -1) {
+            // New URL - add to history
+            if (history.state !== undefined && history.state + 1 !== history.links.length) {
+              // Remove forward history if we're not at the end
+              history.links.splice(history.state + 1);
+            }
+            history.links.push(changeInfo.url);
+            history.state = history.links.length - 1;
+          } else {
+            // Existing URL - update state
+            history.state = urlIndex;
           }
-          history.links.push(changeInfo.url);
-          history.state = history.links.length - 1;
-        } else {
-          // Existing URL - update state
-          history.state = urlIndex;
         }
       } else {
         // Initialize tab history
@@ -582,8 +587,10 @@ class MainController {
 
     // Remove from active tabs
     if (this.activeTabs[removeInfo.windowId] !== undefined) {
-      this.activeTabs[removeInfo.windowId] = this.activeTabs[removeInfo.windowId]
-        .filter((id: number) => id !== tabId);
+      const windowTabs = this.activeTabs[removeInfo.windowId];
+      if (windowTabs) {
+        this.activeTabs[removeInfo.windowId] = windowTabs.filter((id: number) => id !== tabId);
+      }
     }
 
     // Remove from tab history
@@ -683,7 +690,7 @@ class MainController {
         case 'previousTab':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0) {
+            if (tabs.length > 0 && tabs[0]) {
               await this.getTab(tabs[0], {
                 reverse: false,
                 count: command === 'nextTab' ? 1 : -1,
@@ -699,10 +706,11 @@ class MainController {
         case 'viewSource':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0 && tabs[0].url) {
+            if (tabs.length > 0 && tabs[0] && tabs[0].url) {
+              const activeTab = tabs[0];
               await chrome.tabs.create({
-                url: 'view-source:' + tabs[0].url,
-                index: (tabs[0].index || 0) + 1
+                url: 'view-source:' + activeTab.url,
+                index: (activeTab.index || 0) + 1
               });
             }
           } catch (error) {
@@ -713,11 +721,14 @@ class MainController {
         case 'nextCompletionResult':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0 && tabs[0].id) {
+            if (tabs.length > 0 && tabs[0] && tabs[0].id) {
+              const activeTab = tabs[0];
               try {
-                await chrome.tabs.sendMessage(tabs[0].id, {
-                  action: 'nextCompletionResult'
-                });
+                if (activeTab.id) {
+                  await chrome.tabs.sendMessage(activeTab.id, {
+                    action: 'nextCompletionResult'
+                  });
+                }
               } catch (messageError) {
                 // If message fails, create new tab
                 await chrome.windows.create({ url: 'chrome://newtab' });
@@ -731,7 +742,7 @@ class MainController {
         case 'deleteBackWord':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0 && tabs[0].id) {
+            if (tabs.length > 0 && tabs[0] && tabs[0].id) {
               await chrome.tabs.sendMessage(tabs[0].id, { action: 'deleteBackWord' });
             }
           } catch (error) {
@@ -742,7 +753,7 @@ class MainController {
         case 'closeTab':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0 && tabs[0].id) {
+            if (tabs.length > 0 && tabs[0] && tabs[0].id) {
               await chrome.tabs.remove(tabs[0].id);
             }
           } catch (error) {
@@ -753,7 +764,7 @@ class MainController {
         case 'reloadTab':
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs.length > 0 && tabs[0].id) {
+            if (tabs.length > 0 && tabs[0] && tabs[0].id) {
               await chrome.tabs.reload(tabs[0].id);
             }
           } catch (error) {
