@@ -368,6 +368,28 @@ var findFirstOf = function(array, callback) {
   return null;
 };
 
+// Initialize global communication functions for Chrome Extension Manifest v3
+(function() {
+  var $ = function(FN, caller) {
+    return function(action, args, callback) {
+      if (typeof args === 'function') {
+        callback = args;
+        args = {};
+      }
+      (args = args || {}).action = action;
+      FN.call(caller, args, typeof callback === 'function' ?
+          callback : void 0);
+    };
+  };
+  
+  // Global RUNTIME function for sending messages to background script
+  window.RUNTIME = $(chrome.runtime.sendMessage, chrome.runtime);
+  
+  // PORT and ECHO will be initialized when messenger.js creates the port connection
+  window.PORT = null;
+  window.ECHO = null;
+})();
+
 window.parseConfig = (function() {
   var formatConfig = function(configText, config) {
     var result = {

@@ -335,32 +335,42 @@ Command.callCompletionFunction = (function() {
   };
 
   var tabHistoryCompletion = function(value) {
-    RUNTIME('getHistoryStates', null, function(response) {
-      self.completions = {
-        tabhistory: searchArray({
-          array: response.links,
-          search: value.replace(/\S+\s+/, ''),
-          limit: settings.searchlimit
-        })
-      };
-      self.updateCompletions();
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('getHistoryStates', null, function(response) {
+        self.completions = {
+          tabhistory: searchArray({
+            array: response.links,
+            search: value.replace(/\S+\s+/, ''),
+            limit: settings.searchlimit
+          })
+        };
+        self.updateCompletions();
+      });
+    }
   };
 
   var restoreTabCompletion = function(value) {
-    RUNTIME('getChromeSessions', null, function(sessions) {
-      self.completions = {
-        chromesessions: Object.keys(sessions).map(function(e) {
-          return [sessions[e].id + ': ' + sessions[e].title,
-                  sessions[e].url,
-                  sessions[e].id];
-        }).filter(function(e) {
-          return ~e.join('').toLowerCase()
-            .indexOf(value.replace(/^\S+\s+/, '').toLowerCase());
-        })
-      };
-      self.updateCompletions();
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('getChromeSessions', null, function(sessions) {
+        self.completions = {
+          chromesessions: Object.keys(sessions).map(function(e) {
+            return [sessions[e].id + ': ' + sessions[e].title,
+                    sessions[e].url,
+                    sessions[e].id];
+          }).filter(function(e) {
+            return ~e.join('').toLowerCase()
+              .indexOf(value.replace(/^\S+\s+/, '').toLowerCase());
+          })
+        };
+        self.updateCompletions();
+      });
+    }
   };
 
   var deleteSessionCompletion = function() {
@@ -403,23 +413,28 @@ Command.callCompletionFunction = (function() {
       tabHistoryCompletion(value);
       return true;
     case 'tabattach':
-      RUNTIME('getWindows', function(wins) {
-        if (Command.active === true) {
-          Command.completions = {
-            windows: Object.keys(wins).map(function(e, i) {
-              var tlen = wins[e].length.toString();
-              return [
-                (i + 1).toString() + ' (' + tlen +
-                 (tlen === '1' ? ' Tab)' : ' Tabs)'),
-                wins[e].join(', '),
-                e
-              ];
-            })
-          };
-          Command.completions.windows.unshift(['0 (New window)', '']);
-          Command.updateCompletions();
-        }
-      });
+      if (window.portDestroyed) {
+        return;
+      }
+      if (typeof window.RUNTIME === 'function') {
+        RUNTIME('getWindows', function(wins) {
+          if (Command.active === true) {
+            Command.completions = {
+              windows: Object.keys(wins).map(function(e, i) {
+                var tlen = wins[e].length.toString();
+                return [
+                  (i + 1).toString() + ' (' + tlen +
+                   (tlen === '1' ? ' Tab)' : ' Tabs)'),
+                  wins[e].join(', '),
+                  e
+                ];
+              })
+            };
+            Command.completions.windows.unshift(['0 (New window)', '']);
+            Command.updateCompletions();
+          }
+        });
+      }
       self.completions = {};
       return true;
     case 'buffer':
@@ -492,15 +507,25 @@ Command.complete = function(value) {
 Command.execute = function(value, repeats) {
 
   if (value.indexOf('@%') !== -1) {
-    RUNTIME('getRootUrl', function(url) {
-      Command.execute(value.split('@%').join(url), repeats);
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('getRootUrl', function(url) {
+        Command.execute(value.split('@%').join(url), repeats);
+      });
+    }
     return;
   }
   if (value.indexOf('@"') !== -1) {
-    RUNTIME('getPaste', function(paste) {
-      Command.execute(value.split('@"').join(paste), repeats);
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('getPaste', function(paste) {
+        Command.execute(value.split('@"').join(paste), repeats);
+      });
+    }
     return;
   }
 
@@ -564,116 +589,206 @@ Command.execute = function(value, repeats) {
     HUD.hide();
     return;
   case 'duplicate':
-    RUNTIME('duplicateTab', {repeats: repeats});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('duplicateTab', {repeats: repeats});
+    }
     return;
   case 'settings':
     tab.tabbed = true;
-    RUNTIME('openLink', {
-      tab: tab,
-      url: chrome.extension.getURL('/pages/options.html'),
-      repeats: repeats
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: chrome.runtime.getURL('/pages/options.html'),
+        repeats: repeats
+      });
+    }
     return;
   case 'changelog':
     tab.tabbed = true;
-    RUNTIME('openLink', {
-      tab: tab,
-      url: chrome.extension.getURL('/pages/changelog.html'),
-      repeats: repeats
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: chrome.runtime.getURL('/pages/changelog.html'),
+        repeats: repeats
+      });
+    }
     return;
   case 'help':
     tab.tabbed = true;
-    RUNTIME('openLink', {
-      tab: tab,
-      url: chrome.extension.getURL('/pages/mappings.html')
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: chrome.runtime.getURL('/pages/mappings.html')
+      });
+    }
     return;
   case 'stop':
     window.stop();
     return;
   case 'stopall':
-    RUNTIME('cancelAllWebRequests');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('cancelAllWebRequests');
+    }
     return;
   case 'viewsource':
     PORT('viewSource', {tab: tab});
     return;
   case 'pintab':
-    RUNTIME('pinTab', {pinned: true});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('pinTab', {pinned: true});
+    }
     break;
   case 'unpintab':
-    RUNTIME('pinTab', {pinned: false});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('pinTab', {pinned: false});
+    }
     break;
   case 'togglepin':
-    RUNTIME('pinTab');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('pinTab');
+    }
     return;
   case 'undo':
-    RUNTIME('openLast');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLast');
+    }
     return;
   case 'tabnext':
   case 'tabn':
-    RUNTIME('nextTab');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('nextTab');
+    }
     return;
   case 'tabprevious':
   case 'tabp':
   case 'tabN':
-    RUNTIME('previousTab');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('previousTab');
+    }
     return;
   case 'tabprevious':
     return;
   case 'q':
   case 'quit':
   case 'exit':
-    RUNTIME('closeTab', {repeats: repeats});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('closeTab', {repeats: repeats});
+    }
     return;
   case 'qa':
   case 'qall':
-    RUNTIME('closeWindow');
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('closeWindow');
+    }
     return;
   }
 
   if (/^chrome +/.test(value)) {
-    RUNTIME('openLink', {
-      tab: tab,
-      url: value.replace(' ', '://'),
-      noconvert: true
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: value.replace(' ', '://'),
+        noconvert: true
+      });
+    }
     return;
   }
 
   if (/^bookmarks +/.test(value) && !/^\S+\s*$/.test(value)) {
     if (/^\S+\s+\//.test(value)) {
-      RUNTIME('openBookmarkFolder', {
-        path: value.replace(/\S+\s+/, ''),
-        noconvert: true
-      });
+      if (window.portDestroyed) {
+        return;
+      }
+      if (typeof window.RUNTIME === 'function') {
+        RUNTIME('openBookmarkFolder', {
+          path: value.replace(/\S+\s+/, ''),
+          noconvert: true
+        });
+      }
       return;
     }
     if (this.completionResults.length &&
         !this.completionResults.some(function(e) {
           return e[2] === value.replace(/^\S+\s*/, '');
         })) {
-      RUNTIME('openLink', {
-        tab: tab,
-        url: this.completionResults[0][2],
-        noconvert: true
-      });
+      if (window.portDestroyed) {
+        return;
+      }
+      if (typeof window.RUNTIME === 'function') {
+        RUNTIME('openLink', {
+          tab: tab,
+          url: this.completionResults[0][2],
+          noconvert: true
+        });
+      }
       return;
     }
-    RUNTIME('openLink', {
-      tab: tab,
-      url: value.replace(/^\S+\s+/, ''),
-      noconvert: true
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: value.replace(/^\S+\s+/, ''),
+        noconvert: true
+      });
+    }
     return;
   }
 
   if (/^history +/.test(value) && !/^\S+\s*$/.test(value)) {
-    RUNTIME('openLink', {
-      tab: tab,
-      url: Complete.convertToLink(value),
-      noconvert: true
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('openLink', {
+        tab: tab,
+        url: Complete.convertToLink(value),
+        noconvert: true
+      });
+    }
     return;
   }
 

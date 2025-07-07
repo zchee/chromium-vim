@@ -30,15 +30,25 @@ var Frames = {
     return true;
   },
   markAsActive: function() {
-    RUNTIME('markActiveFrame', {
-      frameId: this.frameId,
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('markActiveFrame', {
+        frameId: this.frameId,
+      });
+    }
   },
   init: function(frameId) {
     Frames.frameId = frameId;
-    PORT('addFrame', {
-      isCommandFrame: !!window.isCommandFrame
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.PORT === 'function') {
+      PORT('addFrame', {
+        isCommandFrame: !!window.isCommandFrame
+      });
+    }
   }
 };
 

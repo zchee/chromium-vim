@@ -4,7 +4,7 @@ var pause = document.getElementById('pause'),
     isEnabled = true,
     isBlacklisted = false;
 
-var port = chrome.extension.connect({name: 'popup'});
+var port = chrome.runtime.connect({name: 'popup'});
 port.onMessage.addListener(function(data) {
   if (data === true) {
     blacklist.textContent = 'Enable cVim on this domain';
@@ -26,7 +26,7 @@ settings.addEventListener('click', function() {
   chrome.runtime.sendMessage({
     action: 'openLinkTab',
     active: true,
-    url: chrome.extension.getURL('/pages/options.html')
+    url: chrome.runtime.getURL('/pages/options.html')
   });
 }, false);
 

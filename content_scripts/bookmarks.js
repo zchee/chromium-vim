@@ -54,7 +54,12 @@ Marks = (function() {
         Status.setMessage('Current URL removed from existing QuickMark "' + ch + '"', 1);
       }
     }
-    RUNTIME('updateMarks', {marks: quickMarks});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('updateMarks', {marks: quickMarks})
+    }
   };
 
   _.openQuickMark = function(ch, opts, repeats) {
@@ -64,20 +69,40 @@ Marks = (function() {
     if (repeats !== 1 || (!opts.tab.tabbed && !opts.tab.newWindow)) {
       if (quickMarks[ch][repeats - 1]) {
         opts.url = quickMarks[ch][repeats - 1];
-        RUNTIME('openLink', opts);
+        if (window.portDestroyed) {
+          return;
+        }
+        if (typeof window.RUNTIME === 'function') {
+          RUNTIME('openLink', opts);
+        }
       } else {
         opts.url = quickMarks[ch][0];
-        RUNTIME('openLink', opts);
+        if (window.portDestroyed) {
+          return;
+        }
+        if (typeof window.RUNTIME === 'function') {
+          RUNTIME('openLink', opts);
+        }
       }
     } else if (opts.tab.tabbed) {
       for (var i = 0, l = quickMarks[ch].length; i < l; ++i) {
         opts.url = quickMarks[ch][i];
-        RUNTIME('openLink', opts);
+        if (window.portDestroyed) {
+          return;
+        }
+        if (typeof window.RUNTIME === 'function') {
+          RUNTIME('openLink', opts);
+        }
       }
     } else if (opts.tab.newWindow) {
-      RUNTIME('openLinksWindow', {
-        urls: quickMarks[ch]
-      });
+      if (window.portDestroyed) {
+        return;
+      }
+      if (typeof window.RUNTIME === 'function') {
+        RUNTIME('openLinksWindow', {
+          urls: quickMarks[ch]
+        });
+      }
     }
   };
 
@@ -127,16 +152,26 @@ Marks = (function() {
       if (settings.homedirectory) {
         search = search.replace('~', settings.homedirectory);
       }
-      RUNTIME('getFilePath', { path: search }, function(data) {
-        Marks.filePath(data);
-      });
+      if (window.portDestroyed) {
+        return;
+      }
+      if (typeof window.RUNTIME === 'function') {
+        RUNTIME('getFilePath', { path: search }, function(data) {
+          Marks.filePath(data);
+        });
+      }
     } else {
       lastFileSearch = search;
       _.filePath();
     }
   };
 
-  _.matchPath = function(path) { PORT('getBookmarkPath', {path: path}); };
+  if (window.portDestroyed) {
+    return;
+  }
+  if (typeof window.PORT === 'function') {
+    _.matchPath = function(path) { PORT('getBookmarkPath', {path: path}); };
+  }
 
   return _;
 

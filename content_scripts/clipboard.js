@@ -6,14 +6,24 @@ var Clipboard = {
     } else {
       this.store += (this.store.length ? '\n' : '') + text;
     }
-    RUNTIME('copy', {text: this.store});
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME('copy', {text: this.store});
+    }
   },
   paste: function(tabbed) {
     var engineUrl = Complete.getEngine(settings.defaultengine);
     engineUrl = engineUrl ? engineUrl.requestUrl :
       Complete.getEngine('google').requestUrl;
-    RUNTIME(tabbed ? 'openPasteTab' : 'openPaste', {
-      engineUrl: engineUrl
-    });
+    if (window.portDestroyed) {
+      return;
+    }
+    if (typeof window.RUNTIME === 'function') {
+      RUNTIME(tabbed ? 'openPasteTab' : 'openPaste', {
+        engineUrl: engineUrl
+      });
+    }
   }
 };

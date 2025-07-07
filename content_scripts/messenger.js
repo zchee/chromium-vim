@@ -1,4 +1,4 @@
-var port = chrome.extension.connect({name: 'main'});
+var port = chrome.runtime.connect({name: 'main'});
 port.onDisconnect.addListener(function() {
   window.portDestroyed = true;
   chrome.runtime.sendMessage = function() {};
@@ -10,6 +10,7 @@ port.onDisconnect.addListener(function() {
   Command.destroy();
 });
 
+// Initialize PORT and ECHO functions now that port is connected
 (function() {
   var $ = function(FN, caller) {
     return function(action, args, callback) {
@@ -22,12 +23,13 @@ port.onDisconnect.addListener(function() {
           callback : void 0);
     };
   };
-  RUNTIME = $(chrome.runtime.sendMessage, chrome.runtime);
-  PORT = $(port.postMessage, port);
-  ECHO = function(action, args, callback) {
+  
+  // RUNTIME is already defined in utils.js
+  window.PORT = $(port.postMessage, port);
+  window.ECHO = function(action, args, callback) {
     args.action = 'echoRequest';
     args.call = action;
-    port.postMessage(args, typeof calback === 'function' ?
+    port.postMessage(args, typeof callback === 'function' ?
         callback : void 0);
   };
 })();
@@ -164,7 +166,7 @@ port.onMessage.addListener(function(response) {
   }
 });
 
-chrome.extension.onMessage.addListener(function(request, sender, callback) {
+chrome.runtime.onMessage.addListener(function(request, sender, callback) {
   switch (request.action) {
   case 'hideHud':
     HUD.hide(true);
