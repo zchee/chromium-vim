@@ -461,5 +461,5 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, _sender: chrome.r
   return true;
 });
 
-// Export to make this a proper module for TypeScript
-export { };
+// Export messaging functions for use in other modules
+export { RUNTIME, PORT };

@@ -1,6 +1,74 @@
-declare let insertMode: boolean;
-declare let commandMode: boolean;
-declare let settings: any;
+// Import messaging functions from messenger module
+import { RUNTIME, PORT } from './messenger';
+
+// Global variables - matches original keys.js behavior
+var insertMode: boolean, commandMode: boolean, settings: any;
+
+// Trie data structure from utils.ts
+declare class Trie {
+  find(key: string): any;
+}
+
+declare const Hints: {
+  active: boolean;
+  changeFocus(): void;
+  shouldShowLinkInfo: boolean;
+  acceptLink?: (shift?: boolean) => void;
+  keyDelay: boolean;
+};
+
+declare const Visual: {
+  visualModeActive: boolean;
+  caretModeActive: boolean;
+  lineMode: boolean;
+  selection: Selection | null;
+  exit(): void;
+  collapse(): void;
+  action(key: string): void;
+};
+
+declare const Mappings: {
+  keyPassesLeft: number;
+  handleEscapeKey(): void;
+  queue: string;
+  splitMapping: (queue: string) => string;
+  actions: {
+    inputFocused: boolean;
+    inputElements: HTMLElement[];
+    inputElementsIndex: number;
+    nextCompletionResult(): void;
+    previousCompletionResult(): void;
+  };
+  convertToAction(key: string): boolean;
+  insertCommand(key: string, callback: () => void): void;
+  validMatch: boolean;
+  shouldPrevent(key: string): boolean;
+  defaults: { [key: string]: string[] };
+};
+
+declare const DOM: {
+  isEditable(element: Element | null): boolean;
+  isTextElement(element: Element | null): boolean;
+};
+
+declare const Cursor: {
+  overlay: HTMLElement | null;
+  wiggleWindow(): void;
+};
+
+declare const HUD: {
+  setMessage(message: string): void;
+};
+
+// mappingTrie instance
+declare const mappingTrie: Trie;
+
+// Extension to Object for compare function used in KeyEvents.keyup
+declare global {
+  interface ObjectConstructor {
+    compare(obj1: any, obj2: any, properties: string[]): boolean;
+  }
+}
 
 
 const HAS_EVENT_KEY_SUPPORT = KeyboardEvent.prototype.hasOwnProperty('key');
@@ -769,7 +837,7 @@ export const KeyHandler: KeyHandlerType = {
       if (event.isComposing && /^<.*>$/.test(key))
         key = '';
       window.setTimeout(function() {
-        Command.lastInputValue = Command.input.value;
+        Command.lastInputValue = Command.input!.value;
       }, 0);
       switch (key) {
         case '<Tab>':
@@ -797,15 +865,15 @@ export const KeyHandler: KeyHandlerType = {
           (document.activeElement as HTMLElement)?.blur();
           if (!(Command.history[Command.type].length > 0 &&
             Command.history[Command.type].slice(-1)[0] ===
-            Command.input.value)) {
-            Command.history[Command.type].push(Command.input.value);
+            Command.input!.value)) {
+            Command.history[Command.type].push(Command.input!.value);
             RUNTIME('appendHistory', {
-              value: Command.input.value,
+              value: Command.input!.value,
               type: Command.type
             });
           }
           if (Command.type === 'action') {
-            const inputValue = Command.input.value + (event.ctrlKey ? '&!' : '');
+            const inputValue = Command.input!.value + (event.ctrlKey ? '&!' : '');
             Command.hide(function() {
               setTimeout(function() {
                 Command.execute(inputValue, 1);
@@ -813,7 +881,7 @@ export const KeyHandler: KeyHandlerType = {
             });
             break;
           }
-          if (Command.input.value) {
+          if (Command.input!.value) {
             PORT('callFind', {
               command: 'clear',
               params: []
@@ -822,8 +890,8 @@ export const KeyHandler: KeyHandlerType = {
               command: 'highlight',
               params: [{
                 base: null,
-                mode: Command.modeIdentifier.textContent,
-                search: Command.input.value,
+                mode: Command.modeIdentifier!.textContent,
+                search: Command.input!.value,
                 setIndex: true,
                 executeSearch: false,
                 saveSearch: true
@@ -835,15 +903,15 @@ export const KeyHandler: KeyHandlerType = {
             });
             PORT('callFind', {
               command: 'search',
-              params: [Command.modeIdentifier.textContent, +(Command.modeIdentifier.textContent === '?'), false]
+              params: [Command.modeIdentifier!.textContent, +(Command.modeIdentifier!.textContent === '?'), false]
             });
-            PORT('updateLastSearch', { value: Command.input.value });
+            PORT('updateLastSearch', { value: Command.input!.value });
           }
           Command.hide();
           break;
         default:
           if (key === '<BS>' && Command.lastInputValue.length === 0 &&
-            Command.input.value.length === 0) {
+            Command.input!.value.length === 0) {
             event.preventDefault();
             setTimeout(function() {
               Command.hide();
@@ -853,14 +921,14 @@ export const KeyHandler: KeyHandlerType = {
           setTimeout(function() {
             Command.history.reset = true;
             if (Command.type === 'action') {
-              Command.complete(Command.input.value);
+              Command.complete(Command.input!.value);
               return;
             }
-            if (Command.input.value.length > 2) {
+            if (Command.input!.value.length > 2) {
               if (settings.incsearch) {
                 PORT('doIncSearch', {
-                  search: Command.input.value,
-                  mode: Command.modeIdentifier.textContent,
+                  search: Command.input!.value,
+                  mode: Command.modeIdentifier!.textContent,
                 });
               }
             }
@@ -874,7 +942,7 @@ export const KeyHandler: KeyHandlerType = {
         event.preventDefault();
         if (Command.commandBarFocused() && Command.type !== 'search') {
           window.setTimeout(function() {
-            Command.complete(Command.input.value);
+            Command.complete(Command.input!.value);
           }, 0);
         }
       });

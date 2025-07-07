@@ -1,5 +1,5 @@
-declare function RUNTIME(action: string, data: any): void;
-declare function PORT(action: string, data: any): void;
+// Import messaging functions from messenger module
+import { RUNTIME, PORT } from './messenger';
 
 declare global {
   interface Window {

@@ -1,5 +1,8 @@
 // Chrome Extension Sessions - TypeScript conversion for Manifest v3
 
+// Chrome Extension messaging functions (defined in messenger.ts)
+declare function RUNTIME(action: string, args?: any, callback?: (response?: any) => void): void;
+
 /**
  * Recently closed session entry
  */

@@ -1491,3 +1491,5 @@ Mappings.insertFunctions = (function() {
   };
 })();
 
+(window as any).Mappings = Mappings;
+

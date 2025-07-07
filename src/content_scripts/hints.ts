@@ -1,3 +1,8 @@
+// Import utility functions from utils.ts for Manifest v3 compatibility
+import { Utils, matchLocation, findFirstOf, getLinkableElements, mapDOM } from './utils';
+// Import messaging functions from messenger module
+import { RUNTIME, PORT } from './messenger';
+
 declare const HUD: {
   display(message: string, time?: number): void;
   hide(): void;
@@ -9,14 +14,6 @@ declare const DOM: {
   mouseEvent(type: 'hover' | 'unhover' | 'click', element: Element): void;
   getVisibleBoundingRect(node: Element): DOMRect | null;
   getVisibleBoundingAreaRect(node: Element): DOMRect | null;
-};
-
-declare const Utils: {
-  compressArray<T>(array: (T | null | undefined)[]): T[];
-  cacheFunction<T, R>(callback: (arg: T) => R): {
-    (arg: T): R;
-    clearCache(): void;
-  };
 };
 
 declare const Command: {
@@ -58,12 +55,7 @@ declare const settings: {
   FUNCTIONS: { [key: string]: string };
 };
 
-declare function RUNTIME(action: string, data: any): void;
-declare function PORT(action: string, data: any): void;
-declare function matchLocation(url: string, pattern: string): boolean;
-declare function findFirstOf<T>(array: T[], callback: (item: T) => boolean): T | null;
-declare function getLinkableElements(): Element[];
-declare function mapDOM<T>(root: Node, accept: (node: Node) => T | null): T[];
+// Chrome Extension messaging functions now imported from messenger module
 declare function httpRequest(options: { url: string }, callback: (data: string) => void): void;
 
 interface HintElement extends HTMLDivElement {

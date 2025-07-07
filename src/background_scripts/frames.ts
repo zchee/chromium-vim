@@ -1,5 +1,9 @@
 // Chrome Extension Frames - TypeScript conversion for Manifest v3
 
+// Chrome Extension messaging functions (defined in messenger.ts)
+declare function RUNTIME(action: string, args?: any, callback?: (response?: any) => void): void;
+declare function PORT(action: string, args?: any, callback?: (response?: any) => void): void;
+
 /**
  * Chrome Extension Runtime Port interface for frame communication
  */

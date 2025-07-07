@@ -116,6 +116,24 @@ declare global {
   interface HTMLElement {
     cVim?: boolean;
   }
+
+  // const Command: {
+  //   commandBarFocused(): boolean;
+  //   lastInputValue: string;
+  //   input: HTMLInputElement;
+  //   type: string;
+  //   history: {
+  //     [key: string]: any;
+  //     cycle(type: string, reverse: boolean): void;
+  //     reset?: boolean;
+  //   };
+  //   modeIdentifier: {
+  //     textContent: string;
+  //   };
+  //   hide(callback?: () => void): void;
+  //   execute(value: string, repeats: number): void;
+  //   complete(value: string): void;
+  // };
 }
 
 // Type definitions
@@ -167,6 +185,7 @@ interface CommandType {
   typed?: string;
   type: string;
   active: boolean;
+  commandMode: boolean;
   loaded?: boolean;
   blacklisted?: boolean;
   domElementsLoaded?: boolean;
@@ -265,6 +284,7 @@ export const Command: CommandType = {
   completionResults: [],
   type: '',
   active: false,
+  commandMode: false,
 
   completionStyles: {
     engines: ['Se', '#87ff87'],
@@ -395,7 +415,7 @@ export const Command: CommandType = {
   },
 
   commandBarFocused(): boolean {
-    return !!(commandMode && this.active && document.activeElement &&
+    return !!(this.commandMode && this.active && document.activeElement &&
       document.activeElement.id === 'cVim-command-bar-input');
   },
 
@@ -459,7 +479,7 @@ export const Command: CommandType = {
       this.dataElements.push(item);
       this.data!.appendChild(item);
     }
-    if (!this.active || !commandMode) {
+    if (!this.active || !this.commandMode) {
       this.hideData();
     } else {
       this.data!.style.display = 'block';
@@ -1524,3 +1544,5 @@ export const Command: CommandType = {
     }
   }
 };
+
+(window as any).Command = Command;

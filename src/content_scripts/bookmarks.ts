@@ -1,4 +1,6 @@
 import { searchArray } from './utils';
+// Import messaging functions from messenger module
+import { RUNTIME, PORT } from './messenger';
 
 interface BookmarkItem {
   title: string;
@@ -47,15 +49,12 @@ interface OpenLinkOptions {
   };
 }
 
-type RuntimeFunction = (action: string, args?: any, callback?: (data: any) => void) => void;
-type PortFunction = (action: string, args?: any) => void;
+// Chrome Extension messaging functions now imported from messenger module
 
 declare global {
   const command: Command;
   const _status: Status;
   const settings: Settings;
-  const runtime: RuntimeFunction;
-  const port: PortFunction;
 }
 
 interface MarksModule {
