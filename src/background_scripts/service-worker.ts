@@ -66,7 +66,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 function getTab(tab: chrome.tabs.Tab, reverse: boolean, count: number, first: boolean, last: boolean): void {
   if (!tab.windowId) return;
-  
+
   chrome.tabs.query({ windowId: tab.windowId }, (tabs) => {
     if (first) {
       const firstTab = tabs[0];
@@ -105,7 +105,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
       lastUsedTabs.splice(index, 1);
     }
     lastUsedTabs.unshift(tabId);
-    
+
     if (lastUsedTabs.length > 50) {
       lastUsedTabs = lastUsedTabs.slice(0, 50);
     }
@@ -115,12 +115,12 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 chrome.tabs.onRemoved.addListener((tabId) => {
   delete activeTabs[tabId];
   delete tabHistory[tabId];
-  
+
   const index = lastUsedTabs.indexOf(tabId);
   if (index !== -1) {
     lastUsedTabs.splice(index, 1);
   }
-  
+
   activePorts = activePorts.filter(port => {
     const senderId = port.sender?.tab?.id;
     return senderId !== tabId;
@@ -129,7 +129,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 
 chrome.runtime.onConnect.addListener((port) => {
   activePorts.push(port as CVimPort);
-  
+
   port.onDisconnect.addListener(() => {
     const index = activePorts.indexOf(port as CVimPort);
     if (index !== -1) {
@@ -140,37 +140,37 @@ chrome.runtime.onConnect.addListener((port) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const tabId = sender.tab?.id;
-  
+
   switch (message.action) {
     case 'httpRequest':
       httpRequest(message.request)
         .then(result => sendResponse({ success: true, data: result }))
         .catch(error => sendResponse({ success: false, error: error.message }));
       return true; // Keep message channel open for async response
-      
+
     case 'updateTabIndices':
       updateTabIndices();
       break;
-      
+
     case 'getTab':
       if (sender.tab) {
         getTab(sender.tab, message.reverse, message.count, message.first, message.last);
       }
       break;
-      
+
     case 'getSessions':
       sendResponse(sessions);
       break;
-      
+
     case 'setSessions':
       sessions = message.sessions;
       chrome.storage.local.set({ sessions });
       break;
-      
+
     case 'getLastUsedTabs':
       sendResponse(lastUsedTabs);
       break;
-      
+
     case 'registerTab':
       if (tabId) {
         activeTabs[tabId] = {
@@ -180,7 +180,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         };
       }
       break;
-      
+
     default:
       break;
   }
@@ -191,7 +191,7 @@ chrome.commands.onCommand.addListener((command) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0];
     if (!activeTab?.id) return;
-    
+
     switch (command) {
       case 'nextTab':
         getTab(activeTab, false, 1, false, false);
@@ -231,4 +231,4 @@ chrome.runtime.onStartup.addListener(() => {
   console.log('cVim service worker started');
 });
 
-export {};
+export { };

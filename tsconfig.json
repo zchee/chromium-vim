@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "module": "CommonJS",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
@@ -24,8 +22,7 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "types": ["chrome"]
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*",
