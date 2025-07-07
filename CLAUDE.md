@@ -39,9 +39,12 @@ cVim is a Chrome extension that adds Vim-like keybindings to Google Chrome, prov
 
 ### Build Process
 - Uses **pnpm** for package management (not npm)
-- Main build: `make` (runs create_pages.js and builds parser)
-- Release build: `make release` (creates release.zip)
+- Uses **Rollup** for bundling TypeScript and optimizing Chrome extension bundles
+- Main build: `pnpm run build` (builds parser, generates pages, bundles with Rollup)
+- Development build: `pnpm run build:dev` (watch mode with Rollup)
+- Production build: `pnpm run build:prod` (optimized production build)
 - Parser build: `cd cvimrc_parser && make` (compiles PEG.js grammar)
+- Legacy build: `pnpm run build:old` (uses old TypeScript + custom scripts)
 
 ## Common Commands
 
@@ -50,8 +53,14 @@ cVim is a Chrome extension that adds Vim-like keybindings to Google Chrome, prov
 # Install dependencies
 pnpm install
 
-# Build extension
+# Build extension (Rollup-based)
 pnpm run build
+
+# Development build with watch mode
+pnpm run build:dev
+
+# Production build (optimized)
+pnpm run build:prod
 
 # Build parser only
 cd cvimrc_parser && make
@@ -59,11 +68,17 @@ cd cvimrc_parser && make
 # Run parser tests
 cd cvimrc_parser && make test
 
+# Type checking
+pnpm run type-check
+
+# Linting
+pnpm run lint
+
 # Create release package
-make release
+pnpm run release
 
 # Clean build artifacts
-make clean
+pnpm run clean
 ```
 
 ### Testing
@@ -73,10 +88,20 @@ cd cvimrc_parser && node test/test.js
 ```
 
 ### Chrome Extension Loading
-1. Run `make` to build
+1. Run `pnpm run build` to build with Rollup
 2. Navigate to `chrome://extensions`
 3. Enable "Developer mode"
-4. Click "Load unpacked extension" and select the project directory
+4. Click "Load unpacked extension" and select the `dist/` directory
+
+### Rollup Build System
+The project now uses Rollup for optimized bundling:
+- **Service Worker**: Bundles background scripts into a single ES module
+- **Content Scripts**: Bundles all content scripts into a single IIFE bundle
+- **Page Scripts**: Bundles options and popup scripts separately
+- **Asset Handling**: Copies HTML, CSS, icons, and static assets
+- **TypeScript**: Compiles TypeScript to ES modules for better tree-shaking
+- **Source Maps**: Generates source maps for debugging (development mode)
+- **Watch Mode**: Supports development with auto-rebuild on file changes
 
 ## File Structure Patterns
 

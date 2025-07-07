@@ -1,4 +1,10 @@
-declare const RCParser: any;
+// RCParser is loaded globally by cvimrc_parser.js (loaded first in manifest)
+declare global {
+  const RCParser: {
+    parse: (input: string) => any;
+    SyntaxError: any;
+  };
+}
 
 /**
  * Global LOG function bound to console.log for debugging

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RCParser Test</title>
+</head>
+<body>
+    <h1>RCParser Test</h1>
+    <div id="result"></div>
+    
+    <script src="dist/content_scripts/cvimrc_parser.js"></script>
+    <script>
+        // Test if RCParser is available globally
+        try {
+            if (typeof RCParser !== 'undefined') {
+                document.getElementById('result').innerHTML = '<p style="color: green;">✅ SUCCESS: RCParser is available globally!</p>';
+                
+                // Test basic parsing
+                try {
+                    const testConfig = 'let mapleader = ","';
+                    const parsed = RCParser.parse(testConfig);
+                    document.getElementById('result').innerHTML += '<p style="color: green;">✅ SUCCESS: RCParser.parse() works!</p>';
+                    document.getElementById('result').innerHTML += '<p>Parsed result: ' + JSON.stringify(parsed) + '</p>';
+                } catch (parseError) {
+                    document.getElementById('result').innerHTML += '<p style="color: orange;">⚠️ WARNING: RCParser.parse() failed: ' + parseError.message + '</p>';
+                }
+            } else {
+                document.getElementById('result').innerHTML = '<p style="color: red;">❌ ERROR: RCParser is undefined!</p>';
+            }
+        } catch (error) {
+            document.getElementById('result').innerHTML = '<p style="color: red;">❌ ERROR: ' + error.message + '</p>';
+        }
+    </script>
+</body>
+</html>

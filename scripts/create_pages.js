@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 
+import { readFileSync, writeFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import hljs from 'highlight.js';
+import markdownIt from 'markdown-it';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 process.chdir(__dirname);
 
-// import { readFileSync, writeFileSync } from 'fs';
-// import { getLanguage, highlight } from 'highlight.js';
-// import 'highlight.js';
-var fs = require('fs');
-var hljs = require('highlight.js');
-
-var md = require('markdown-it')('default', {
+const md = markdownIt('default', {
   html: false,
   typographer: true,
   quotes: '""\'\'',
@@ -29,51 +32,27 @@ var md = require('markdown-it')('default', {
   }
 });
 
-var scripts = [
+const scripts = [
   '../content_scripts/cvimrc_parser.js',
-  '../content_scripts/session.js',
-  '../content_scripts/utils.js',
-  '../content_scripts/dom.js',
-  '../content_scripts/hints.js',
-  '../content_scripts/bookmarks.js',
-  '../content_scripts/keys.js',
-  '../content_scripts/clipboard.js',
-  '../content_scripts/complete.js',
-  '../content_scripts/mappings.js',
-  '../content_scripts/find.js',
-  '../content_scripts/cursor.js',
-  '../content_scripts/status.js',
-  '../content_scripts/hud.js',
-  '../content_scripts/visual.js',
-  '../content_scripts/command.js',
-  '../content_scripts/scroll.js',
-  '../content_scripts/search.js',
-  '../content_scripts/frames.js',
-  '../content_scripts/messenger.js',
+  '../content_scripts/content-bundle.js'
 ];
 
-var makeHTML = function(data) {
+const makeHTML = (data) => {
   return '<!DOCTYPE html><html><head>' +
     '<meta charset="utf-8">' +
     '<link rel="stylesheet" href="./markdown.css">' +
     '<link rel="stylesheet" href="./hljs.css">' +
     '<link rel="stylesheet" href="../content_scripts/main.css">' +
-    scripts.map(function(e) {
-      return '<script src="' + e + '"></script>';
-    }).join('\n') +
+    scripts.map(e => `<script src="${e}"></script>`).join('\n') +
     '</head>' + md.render(data) + '</html>';
 };
 
-(function() {
+const fileMap = {
+  mappings: 'README.md',
+  changelog: 'CHANGELOG.md'
+};
 
-  var fileMap = {
-    mappings: 'README.md',
-    changelog: 'CHANGELOG.md'
-  };
-
-  for (var key in fileMap) {
-    var data = fs.readFileSync('../' + fileMap[key], 'utf8');
-    fs.writeFileSync('../src/pages/' + key + '.html', makeHTML(data));
-  }
-
-})();
+for (const key in fileMap) {
+  const data = readFileSync('../' + fileMap[key], 'utf8');
+  writeFileSync('../src/pages/' + key + '.html', makeHTML(data));
+}
