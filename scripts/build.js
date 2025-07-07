@@ -1,24 +1,25 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import { existsSync, rmSync, mkdirSync, readdirSync, statSync, copyFileSync } from 'fs';
+import path, { resolve, join } from 'path';
+import { execSync } from 'child_process';
 
-const PROJECT_ROOT = path.resolve(__dirname, '..');
-const SRC_DIR = path.join(PROJECT_ROOT, 'src');
-const DIST_DIR = path.join(PROJECT_ROOT, 'dist');
+// const PROJECT_ROOT = resolve(path.dirname(), '..');
+const PROJECT_ROOT = '.';
+const SRC_DIR = join(PROJECT_ROOT, 'src');
+const DIST_DIR = join(PROJECT_ROOT, 'dist');
 
 console.log('Building cVim TypeScript project...');
 
 // Clean dist directory
-if (fs.existsSync(DIST_DIR)) {
-  fs.rmSync(DIST_DIR, { recursive: true, force: true });
+if (existsSync(DIST_DIR)) {
+  rmSync(DIST_DIR, { recursive: true, force: true });
 }
 
 // Compile TypeScript
 console.log('Compiling TypeScript...');
 try {
-  execSync('npx tsc', { cwd: PROJECT_ROOT, stdio: 'inherit' });
+  execSync('pnpm exec tsc', { cwd: PROJECT_ROOT, stdio: 'inherit' });
 } catch (error) {
   console.error('TypeScript compilation failed');
   process.exit(1);
@@ -47,24 +48,24 @@ console.log('Copying assets...');
 // });
 
 // Copy pages directory
-const pagesDir = path.join(PROJECT_ROOT, 'src/pages');
-const distPagesDir = path.join(DIST_DIR, 'pages');
+const pagesDir = join(PROJECT_ROOT, 'src/pages');
+const distPagesDir = join(DIST_DIR, 'pages');
 
-if (fs.existsSync(pagesDir)) {
+if (existsSync(pagesDir)) {
   function copyDirectory(src, dest) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
+    if (!existsSync(dest)) {
+      mkdirSync(dest, { recursive: true });
     }
     
-    const items = fs.readdirSync(src);
+    const items = readdirSync(src);
     for (const item of items) {
-      const srcPath = path.join(src, item);
-      const destPath = path.join(dest, item);
+      const srcPath = join(src, item);
+      const destPath = join(dest, item);
       
-      if (fs.statSync(srcPath).isDirectory()) {
+      if (statSync(srcPath).isDirectory()) {
         copyDirectory(srcPath, destPath);
       } else {
-        fs.copyFileSync(srcPath, destPath);
+        copyFileSync(srcPath, destPath);
       }
     }
   }
@@ -74,24 +75,24 @@ if (fs.existsSync(pagesDir)) {
 }
 
 // Copy icons
-const iconsDir = path.join(PROJECT_ROOT, 'icons');
-const distIconsDir = path.join(DIST_DIR, 'icons');
+const iconsDir = join(PROJECT_ROOT, 'icons');
+const distIconsDir = join(DIST_DIR, 'icons');
 
-if (fs.existsSync(iconsDir)) {
+if (existsSync(iconsDir)) {
   function copyDirectory(src, dest) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
+    if (!existsSync(dest)) {
+      mkdirSync(dest, { recursive: true });
     }
     
-    const items = fs.readdirSync(src);
+    const items = readdirSync(src);
     for (const item of items) {
-      const srcPath = path.join(src, item);
-      const destPath = path.join(dest, item);
+      const srcPath = join(src, item);
+      const destPath = join(dest, item);
       
-      if (fs.statSync(srcPath).isDirectory()) {
+      if (statSync(srcPath).isDirectory()) {
         copyDirectory(srcPath, destPath);
       } else {
-        fs.copyFileSync(srcPath, destPath);
+        copyFileSync(srcPath, destPath);
       }
     }
   }
@@ -101,24 +102,24 @@ if (fs.existsSync(iconsDir)) {
 }
 
 // Copy pages directory
-const contentScriptsDir = path.join(PROJECT_ROOT, 'src/content_scripts');
-const distContentScriptsDir = path.join(DIST_DIR, 'content_scripts');
+const contentScriptsDir = join(PROJECT_ROOT, 'src/content_scripts');
+const distContentScriptsDir = join(DIST_DIR, 'content_scripts');
 
-if (fs.existsSync(contentScriptsDir)) {
+if (existsSync(contentScriptsDir)) {
   function copyDirectory(src, dest) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
+    if (!existsSync(dest)) {
+      mkdirSync(dest, { recursive: true });
     }
     
-    const items = fs.readdirSync(src);
+    const items = readdirSync(src);
     for (const item of items) {
-      const srcPath = path.join(src, item);
-      const destPath = path.join(dest, item);
+      const srcPath = join(src, item);
+      const destPath = join(dest, item);
       
-      if (fs.statSync(srcPath).isDirectory()) {
+      if (statSync(srcPath).isDirectory()) {
         copyDirectory(srcPath, destPath);
       } else {
-        fs.copyFileSync(srcPath, destPath);
+        copyFileSync(srcPath, destPath);
       }
     }
   }
@@ -134,21 +135,21 @@ const filesToCopy = [
 ];
 
 filesToCopy.forEach(file => {
-  const srcPath = path.join(PROJECT_ROOT, file);
-  const distPath = path.join(DIST_DIR, file);
+  const srcPath = join(PROJECT_ROOT, file);
+  const distPath = join(DIST_DIR, file);
   
-  if (fs.existsSync(srcPath)) {
-    fs.copyFileSync(srcPath, distPath);
+  if (existsSync(srcPath)) {
+    copyFileSync(srcPath, distPath);
     console.log(`Copied ${file}`);
   }
 });
 
 // Copy manifest.json to dist
-const manifestSrc = path.join(PROJECT_ROOT, 'manifest.json');
-const manifestDist = path.join(DIST_DIR, 'manifest.json');
+const manifestSrc = join(PROJECT_ROOT, 'manifest.json');
+const manifestDist = join(DIST_DIR, 'manifest.json');
 
-if (fs.existsSync(manifestSrc)) {
-  fs.copyFileSync(manifestSrc, manifestDist);
+if (existsSync(manifestSrc)) {
+  copyFileSync(manifestSrc, manifestDist);
   console.log('Copied manifest.json');
 }
 
