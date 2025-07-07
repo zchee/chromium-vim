@@ -143,16 +143,16 @@ declare var History: HistoryModule;
 class MainController {
   /** Session storage data */
   public sessions: SessionData = {};
-  
+
   /** Active tabs per window */
   public activeTabs: ActiveTabsData = {};
-  
+
   /** Tab navigation history */
   public tabHistory: TabHistoryData = {};
-  
+
   /** Active extension ports */
   public activePorts: chrome.runtime.Port[] = [];
-  
+
   /** Last used tabs for quick switching */
   public lastUsedTabs: number[] = [];
 
@@ -180,9 +180,9 @@ class MainController {
         try {
           const xhr = new XMLHttpRequest();
           const method = request.method || 'GET';
-          
+
           xhr.open(method, request.url);
-          
+
           // Set headers if provided
           if (request.headers) {
             Object.keys(request.headers).forEach(key => {
@@ -243,7 +243,7 @@ class MainController {
       }
 
       const tabs = await chrome.tabs.query({ currentWindow: true });
-      
+
       const messagePromises = tabs.map(async (tab: chrome.tabs.Tab) => {
         if (tab.id && typeof tab.index === 'number') {
           try {
@@ -251,7 +251,7 @@ class MainController {
               action: 'displayTabIndices',
               index: tab.index + 1
             };
-            
+
             await chrome.tabs.sendMessage(tab.id, message);
           } catch (error) {
             // Ignore errors for tabs that can't receive messages
@@ -314,7 +314,7 @@ class MainController {
 
     try {
       const tabs = await chrome.tabs.query({ windowId: tab.windowId });
-      
+
       if (tabs.length === 0) {
         console.warn('MainController.getTab: No tabs found in window');
         return;
@@ -330,9 +330,9 @@ class MainController {
         const count = options.count || 1;
         const reverse = options.reverse || false;
         const direction = reverse ? -1 : 1;
-        
+
         let newIndex = direction * count + tab.index;
-        
+
         if (count !== -1 && count !== 1) {
           // Clamp to valid range
           newIndex = Math.min(Math.max(0, newIndex), tabs.length - 1);
@@ -345,7 +345,7 @@ class MainController {
             newIndex = ((newIndex % tabs.length) + tabs.length) % tabs.length;
           }
         }
-        
+
         targetIndex = newIndex;
       }
 
@@ -396,7 +396,7 @@ class MainController {
         const actualCount = count || 1;
         const direction = reverse ? -1 : 1;
         let newIndex = direction * actualCount + tab.index;
-        
+
         if (actualCount !== -1 && actualCount !== 1) {
           newIndex = Math.min(Math.max(0, newIndex), tabs.length - 1);
         } else {
@@ -406,7 +406,7 @@ class MainController {
             newIndex = ((newIndex % tabs.length) + tabs.length) % tabs.length;
           }
         }
-        
+
         targetIndex = newIndex;
       }
 
@@ -427,14 +427,14 @@ class MainController {
   async initializeSessions(): Promise<void> {
     try {
       const result = await chrome.storage.local.get('sessions');
-      
+
       if (result.sessions === undefined) {
         await chrome.storage.local.set({ sessions: {} });
         this.sessions = {};
       } else {
         this.sessions = result.sessions;
       }
-      
+
       console.debug('MainController.initializeSessions: Sessions initialized');
     } catch (error) {
       console.error('MainController.initializeSessions: Failed to initialize sessions:', error);
@@ -533,7 +533,7 @@ class MainController {
         const history = this.tabHistory[tabId];
         if (history && changeInfo.url) {
           const urlIndex = history.links.indexOf(changeInfo.url);
-          
+
           if (urlIndex === -1) {
             // New URL - add to history
             if (history.state !== undefined && history.state + 1 !== history.links.length) {
@@ -572,7 +572,7 @@ class MainController {
     if (this.activeTabs[windowId] === undefined) {
       this.activeTabs[windowId] = [];
     }
-    
+
     this.activeTabs[windowId].push(activeInfo.tabId);
     if (this.activeTabs[windowId].length > 2) {
       this.activeTabs[windowId].shift();
@@ -633,11 +633,11 @@ class MainController {
     }
 
     const frameId = port.sender?.frameId || 0;
-    
+
     // Send initial messages
     port.postMessage({ type: 'hello' });
     port.postMessage({ type: 'addFrame', frameId: frameId });
-    
+
     // Add to active ports
     this.activePorts.push(port);
 
@@ -870,7 +870,7 @@ if (typeof window !== 'undefined') {
   (window as any).activePorts = mainController.activePorts;
   (window as any).LastUsedTabs = mainController.lastUsedTabs;
   (window as any).updateTabIndices = () => mainController.updateTabIndicesSync();
-  (window as any).getTab = (tab: chrome.tabs.Tab, reverse?: boolean, count?: number, first?: boolean, last?: boolean) => 
+  (window as any).getTab = (tab: chrome.tabs.Tab, reverse?: boolean, count?: number, first?: boolean, last?: boolean) =>
     mainController.getTabSync(tab, reverse, count, first, last);
 } else {
   // Service worker context
@@ -880,22 +880,22 @@ if (typeof window !== 'undefined') {
   (globalThis as any).activePorts = mainController.activePorts;
   (globalThis as any).LastUsedTabs = mainController.lastUsedTabs;
   (globalThis as any).updateTabIndices = () => mainController.updateTabIndicesSync();
-  (globalThis as any).getTab = (tab: chrome.tabs.Tab, reverse?: boolean, count?: number, first?: boolean, last?: boolean) => 
+  (globalThis as any).getTab = (tab: chrome.tabs.Tab, reverse?: boolean, count?: number, first?: boolean, last?: boolean) =>
     mainController.getTabSync(tab, reverse, count, first, last);
 }
 
 // Modern export for TypeScript modules
 export default mainController;
-export { 
-  MainController, 
-  SessionData, 
-  ActiveTabsData, 
-  TabHistoryData, 
-  TabHistoryEntry, 
-  HttpRequestOptions, 
+export {
+  MainController,
+  SessionData,
+  ActiveTabsData,
+  TabHistoryData,
+  TabHistoryEntry,
+  HttpRequestOptions,
   TabNavigationOptions,
   ExtensionMessage,
   PortMessage,
   TabIndicesMessage,
   CompletionMessage
-};
+}; 

@@ -23,6 +23,8 @@ let activeTabs: { [tabId: number]: CVimActiveTab } = {};
 let tabHistory: CVimTabHistory = {};
 let activePorts: CVimPort[] = [];
 let lastUsedTabs: number[] = [];
+let globalEnabled: boolean = true;
+let blacklistedDomains: Set<string> = new Set();
 
 async function httpRequest(request: { url: string; json?: boolean }): Promise<any> {
   try {
@@ -54,6 +56,28 @@ function updateTabIndices(): void {
   });
 }
 
+function extractDomain(url: string): string {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return '';
+  }
+}
+
+function loadSettings(): void {
+  chrome.storage.local.get(['globalEnabled', 'blacklistedDomains'], (result) => {
+    globalEnabled = result.globalEnabled !== false; // Default to true
+    blacklistedDomains = new Set(result.blacklistedDomains || []);
+  });
+}
+
+function saveSettings(): void {
+  chrome.storage.local.set({
+    globalEnabled,
+    blacklistedDomains: Array.from(blacklistedDomains)
+  });
+}
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.get('sessions', (result) => {
     if (result.sessions === undefined) {
@@ -62,6 +86,7 @@ chrome.runtime.onInstalled.addListener(() => {
       sessions = result.sessions;
     }
   });
+  loadSettings();
 });
 
 function getTab(tab: chrome.tabs.Tab, reverse: boolean, count: number, first: boolean, last: boolean): void {
@@ -142,6 +167,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const tabId = sender.tab?.id;
 
   switch (message.action) {
+    case 'ping':
+      // Simple keepalive ping to ensure service worker is active
+      sendResponse(true);
+      break;
+
     case 'httpRequest':
       httpRequest(message.request)
         .then(result => sendResponse({ success: true, data: result }))
@@ -179,6 +209,73 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           title: message.title
         };
       }
+      break;
+
+    case 'getActiveState':
+      sendResponse(globalEnabled);
+      break;
+
+    case 'getBlacklisted':
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        if (activeTab?.url) {
+          const domain = extractDomain(activeTab.url);
+          sendResponse(blacklistedDomains.has(domain));
+        } else {
+          sendResponse(false);
+        }
+      });
+      return true; // Keep message channel open for async response
+
+    case 'openLinkTab':
+      chrome.tabs.create({
+        url: message.url,
+        active: message.active
+      });
+      break;
+
+    case 'toggleEnabled':
+      globalEnabled = !globalEnabled;
+      saveSettings();
+
+      // Notify all content scripts of the state change
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          if (tab.id) {
+            chrome.tabs.sendMessage(tab.id, {
+              action: 'setEnabled',
+              enabled: globalEnabled
+            }).catch(() => {
+              // Ignore errors for tabs that can't receive messages
+            });
+          }
+        });
+      });
+      break;
+
+    case 'toggleBlacklisted':
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const activeTab = tabs[0];
+        if (activeTab?.url) {
+          const domain = extractDomain(activeTab.url);
+          if (blacklistedDomains.has(domain)) {
+            blacklistedDomains.delete(domain);
+          } else {
+            blacklistedDomains.add(domain);
+          }
+          saveSettings();
+
+          // Notify the current tab of the blacklist change
+          if (activeTab.id) {
+            chrome.tabs.sendMessage(activeTab.id, {
+              action: 'setBlacklisted',
+              blacklisted: blacklistedDomains.has(domain)
+            }).catch(() => {
+              // Ignore errors if tab can't receive messages
+            });
+          }
+        }
+      });
       break;
 
     default:
@@ -229,6 +326,7 @@ chrome.commands.onCommand.addListener((command) => {
 // Initialize
 chrome.runtime.onStartup.addListener(() => {
   console.log('cVim service worker started');
+  loadSettings();
 });
 
 export { };
